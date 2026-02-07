@@ -1,0 +1,98 @@
+Test Type,Test ID,Page/Module,Suite,Scenario,Steps,Expected Result
+Regression,R-AUTH-01,Authentication,Registration,Register user with valid data,"1. Go to /login 2. Enter name and email 3. Click Signup 4. Fill form 5. Click Create Account",Account created successfully
+Regression,R-AUTH-02,Authentication,Registration,Register with existing email,"1. Go to /login 2. Enter registered email 3. Click Signup",Error: Email already exists
+Regression,R-AUTH-03,Authentication,Registration,Register with empty name,"1. Go to /login 2. Leave name empty 3. Enter email 4. Click Signup",Validation error on name
+Regression,R-AUTH-04,Authentication,Registration,Register with invalid email format,"1. Go to /login 2. Enter name 3. Enter invalid email 4. Click Signup",Validation error on email
+Regression,R-AUTH-05,Authentication,Registration,Register with empty required fields,"1. Go to signup form 2. Leave fields empty 3. Click Create Account",Validation errors shown
+Regression,R-AUTH-06,Authentication,Registration,Verify account deletion,"1. Login 2. Click Delete Account 3. Confirm",Account deleted
+Regression,R-AUTH-07,Authentication,Login,Login with valid credentials,"1. Go to /login 2. Enter valid email/password 3. Click Login",Logged in successfully
+Regression,R-AUTH-08,Authentication,Login,Login with incorrect password,"1. Go to /login 2. Enter valid email 3. Enter wrong password 4. Click Login",Error: Incorrect credentials
+Regression,R-AUTH-09,Authentication,Login,Login with incorrect email,"1. Go to /login 2. Enter unregistered email 3. Enter password 4. Click Login",Error: Incorrect credentials
+Regression,R-AUTH-10,Authentication,Login,Login with empty email,"1. Go to /login 2. Leave email empty 3. Enter password 4. Click Login",Validation error
+Regression,R-AUTH-11,Authentication,Login,Login with empty password,"1. Go to /login 2. Enter email 3. Leave password empty 4. Click Login",Validation error
+Regression,R-AUTH-12,Authentication,Login,Login with both fields empty,"1. Go to /login 2. Leave both empty 3. Click Login",Validation errors
+Regression,R-AUTH-13,Authentication,Logout,Logout logged-in user,"1. Login 2. Click Logout",Redirected to login page
+Regression,R-AUTH-14,Authentication,Logout,Verify session cleared after logout,"1. Login 2. Add to cart 3. Logout 4. Check cart",Session ended
+Regression,R-PROD-01,Products,Products List,Verify all products page,"1. Click Products nav link 2. Verify page loaded",Products list visible
+Regression,R-PROD-02,Products,Products List,Verify product card details,"1. Go to products 2. Check first product","Image, name, price visible"
+Regression,R-PROD-03,Products,Products List,Navigate to product detail,"1. Go to products 2. Click View Product",Detail page opens
+Regression,R-PROD-04,Products,Products List,Verify product detail info,"1. Go to product detail","Name, category, price, availability, condition, brand visible"
+Regression,R-PROD-05,Products,Products List,Verify product quantity selector,"1. Go to product detail 2. Check quantity input",Quantity input visible
+Regression,R-PROD-06,Products,Search,Search with valid keyword,"1. Go to products 2. Enter ""shirt"" 3. Click search",Related products shown
+Regression,R-PROD-07,Products,Search,Search with partial keyword,"1. Search for ""dre""",Products with dress shown
+Regression,R-PROD-08,Products,Search,Search with no results,"1. Search for ""xyznonexistent""",No products or message shown
+Regression,R-PROD-09,Products,Search,Search with special characters,"1. Search for ""@#$%""",Handled gracefully
+Regression,R-PROD-10,Products,Search,Search with empty query,"1. Leave search empty 2. Click search",All products or validation
+Regression,R-PROD-11,Products,Search,Search case insensitivity,"1. Search ""SHIRT"" vs ""shirt""",Same results
+Regression,R-PROD-12,Products,Categories,Filter by Women category,"1. Click Women 2. Click sub-category",Women products shown
+Regression,R-PROD-13,Products,Categories,Filter by Men category,"1. Click Men 2. Click sub-category",Men products shown
+Regression,R-PROD-14,Products,Categories,Filter by Kids category,"1. Click Kids 2. Click sub-category",Kids products shown
+Regression,R-PROD-15,Products,Categories,Verify category breadcrumb,"1. Select a category",Breadcrumb shows category
+Regression,R-PROD-16,Products,Categories,Switch between categories,"1. Select Women > Dress 2. Select Men > Jeans",Products update correctly
+Regression,R-PROD-17,Products,Brands,Filter by Polo brand,"1. Click Polo in sidebar",Polo products shown
+Regression,R-PROD-18,Products,Brands,Filter by H&M brand,"1. Click H&M in sidebar",H&M products shown
+Regression,R-PROD-19,Products,Brands,Filter by Madame brand,"1. Click Madame in sidebar",Madame products shown
+Regression,R-PROD-20,Products,Brands,Filter by Babyhug brand,"1. Click Babyhug in sidebar",Babyhug products shown
+Regression,R-PROD-21,Products,Brands,Switch between brands,"1. Click Polo 2. Click H&M",Products update to H&M
+Regression,R-PROD-22,Products,Brands,Verify brand product count,"1. Note count 2. Click brand",Products match count
+Regression,R-PROD-23,Products,Reviews,Add review on product,"1. Go to detail 2. Enter name, email, review 3. Submit",Thank you message shown
+Regression,R-PROD-24,Products,Reviews,Add review with empty fields,"1. Go to detail 2. Leave empty 3. Submit",Validation errors
+Regression,R-PROD-25,Products,Reviews,Verify review form visibility,"1. Go to detail 2. Scroll to review",Write Your Review visible
+Regression,R-CART-01,Cart,Add to Cart,Add product from products page,"1. Go to products 2. Hover 3. Click Add to Cart",Product Added modal
+Regression,R-CART-02,Cart,Add to Cart,Add product from product detail,"1. Go to detail 2. Click Add to Cart",Product Added modal
+Regression,R-CART-03,Cart,Add to Cart,Add product from homepage,"1. Hover on featured product 2. Click Add to Cart",Product Added modal
+Regression,R-CART-04,Cart,Add to Cart,Add product from recommended items,"1. Scroll to recommended 2. Click Add to Cart",Product Added modal
+Regression,R-CART-05,Cart,Add to Cart,Continue shopping after add,"1. Add product 2. Click Continue Shopping",Modal closes
+Regression,R-CART-06,Cart,Add to Cart,View cart after add,"1. Add product 2. Click View Cart",Navigate to cart
+Regression,R-CART-07,Cart,Add to Cart,Add multiple different products,"1. Add Product A 2. Continue 3. Add Product B",Cart shows both
+Regression,R-CART-08,Cart,Add to Cart,Add same product twice,"1. Add Product A 2. Add Product A again",Quantity increases
+Regression,R-CART-09,Cart,Quantity,Add product with quantity > 1,"1. Go to detail 2. Set qty to 4 3. Add to cart 4. View cart",Cart shows qty 4
+Regression,R-CART-10,Cart,Quantity,Verify total price calculation,"1. Add product (qty: 3) 2. View cart",Total = price x 3
+Regression,R-CART-11,Cart,Quantity,Verify cart subtotal,"1. Add multiple products 2. View cart",Subtotal correct
+Regression,R-CART-12,Cart,Remove,Remove single product,"1. Add product 2. Go to cart 3. Click X",Product removed
+Regression,R-CART-13,Cart,Remove,Remove all products,"1. Add multiple 2. Remove each",Cart empty
+Regression,R-CART-14,Cart,Remove,Verify empty cart state,"1. Remove all products",Empty state shown
+Regression,R-CHK-01,Checkout,Address,Verify delivery address,"1. Login 2. Add to cart 3. Checkout",Delivery address correct
+Regression,R-CHK-02,Checkout,Address,Verify billing address,"1. Login 2. Add to cart 3. Checkout",Billing address correct
+Regression,R-CHK-03,Checkout,Address,Verify address format,"1. Go to checkout",Full address details shown
+Regression,R-CHK-04,Checkout,Order Summary,Verify order items,"1. Add products 2. Checkout",All items shown
+Regression,R-CHK-05,Checkout,Order Summary,Verify order total,"1. Add products 2. Checkout",Total matches cart
+Regression,R-CHK-06,Checkout,Order Summary,Add order comment,"1. Checkout 2. Add comment",Comment accepted
+Regression,R-SUB-01,Subscription,Subscription,Subscribe from homepage,"1. Scroll to footer 2. Enter email 3. Subscribe",Success message
+Regression,R-SUB-02,Subscription,Subscription,Subscribe from cart page,"1. Go to cart 2. Subscribe",Success message
+Regression,R-SUB-03,Subscription,Subscription,Subscribe with invalid email,"1. Enter invalid email 2. Subscribe",Validation error
+Regression,R-SUB-04,Subscription,Subscription,Subscribe with empty email,"1. Leave empty 2. Subscribe",Validation error
+Regression,R-CON-01,Contact Us,Contact Form,Submit contact form,"1. Fill all fields 2. Upload file 3. Submit 4. Accept alert",Success message
+Regression,R-CON-02,Contact Us,Contact Form,Submit without file,"1. Fill fields except file 2. Submit",Form submits
+Regression,R-CON-03,Contact Us,Contact Form,Submit with empty fields,"1. Leave empty 2. Submit",Validation errors
+Regression,R-CON-04,Contact Us,Contact Form,Verify home button after submit,"1. Submit 2. Click Home",Navigate to homepage
+E2E,E2E-PO-01,Purchase,Register During Checkout,Complete purchase with registration at checkout,"1. Add to cart 2. Checkout 3. Register/Login 4. Register 5. Continue 6. Cart 7. Checkout 8. Verify address 9. Comment 10. Place Order 11. Payment 12. Confirm",Order Placed confirmation
+E2E,E2E-PO-02,Purchase,Register Before Checkout,Complete purchase after pre-registration,"1. Register 2. Verify created 3. Continue 4. Add to cart 5. Checkout 6. Verify address 7. Comment 8. Place Order 9. Payment 10. Confirm 11. Delete account",Order Placed confirmation
+E2E,E2E-PO-03,Purchase,Login Before Checkout,Complete purchase as existing user,"1. Login 2. Verify logged in 3. Add to cart 4. Checkout 5. Verify address 6. Comment 7. Place Order 8. Payment 9. Confirm",Order Placed confirmation
+E2E,E2E-CP-01,Cart,Cart Persistence,Verify cart persists after login,"1. Search products 2. Add to cart 3. Verify cart 4. Login 5. Go to cart",Cart contains products
+E2E,E2E-INV-01,Invoice,Download Invoice,Download invoice after purchase,"1. Add to cart 2. Checkout 3. Login/Register 4. Complete checkout 5. Payment 6. Confirm 7. Download Invoice 8. Verify 9. Continue",Invoice downloaded
+E2E,E2E-UJ-01,User Journey,New User Journey,New user full shopping experience,"1. Homepage 2. Browse categories 3. Search 4. View detail 5. Add to cart 6. Continue 7. Add another 8. Cart 9. Checkout 10. Register 11. Complete 12. Download 13. Delete",Journey successful
+E2E,E2E-UJ-02,User Journey,Returning User Journey,Returning user shopping,"1. Login 2. Browse brand 3. Add products 4. Modify qty 5. Remove item 6. Checkout 7. Payment 8. Logout",Journey successful
+Smoke,S-HP-01,Homepage,Visibility,Verify homepage loads successfully,"1. Navigate to homepage 2. Verify page title 3. Verify main content visible",Homepage loads with all sections visible
+Smoke,S-HP-02,Homepage,Visibility,Verify header section elements,"1. Verify logo visible 2. Verify all nav links present",Logo and navigation links displayed
+Smoke,S-HP-03,Homepage,Visibility,Verify slider section,"1. Verify slider visible 2. Verify prev/next buttons 3. Verify slider items",Slider section functional
+Smoke,S-HP-04,Homepage,Visibility,Verify category sidebar,"1. Verify sidebar visible 2. Verify Women/Men/Kids categories",Categories displayed
+Smoke,S-HP-05,Homepage,Visibility,Verify brands sidebar,"1. Verify brands section visible 2. Verify brand links",Brands displayed
+Smoke,S-HP-06,Homepage,Visibility,Verify featured products section,"1. Verify section visible 2. Verify product cards 3. Verify images, prices, names",Featured products displayed
+Smoke,S-HP-07,Homepage,Visibility,Verify recommended items section,"1. Scroll to section 2. Verify carousel 3. Verify items",Recommended items displayed
+Smoke,S-HP-08,Homepage,Visibility,Verify footer section,"1. Scroll to footer 2. Verify subscription form 3. Verify copyright",Footer displayed
+Smoke,S-HP-09,Homepage,Interactions,Verify product hover overlay,"1. Hover on product card 2. Verify Add to Cart button 3. Verify View Product link",Overlay appears on hover
+Smoke,S-HP-10,Homepage,Interactions,Verify slider navigation,"1. Click next button 2. Verify slide changes 3. Click prev 4. Verify slide changes",Slider navigates correctly
+Smoke,S-HP-11,Homepage,Interactions,Verify scroll up arrow button,"1. Scroll to bottom 2. Verify arrow appears 3. Click arrow 4. Verify scrolled to top",Scroll up works
+Smoke,S-HP-12,Homepage,Interactions,Verify scroll up without arrow,"1. Scroll to bottom 2. Scroll up manually 3. Verify top content visible",Manual scroll works
+Smoke,S-PP-01,Products Page,Visibility,Verify products page loads,"1. Navigate to /products 2. Verify title 3. Verify products list",Products page loads
+Smoke,S-PP-02,Products Page,Visibility,Verify search box,"1. Verify search input 2. Verify search button",Search box visible
+Smoke,S-PP-03,Products Page,Visibility,Verify product cards structure,"1. Verify image 2. Verify name 3. Verify price 4. Verify View Product button",Product cards complete
+Smoke,S-CP-01,Cart Page,Visibility,Verify cart page loads,"1. Navigate to /view_cart 2. Verify breadcrumb 3. Verify cart table/empty state",Cart page loads
+Smoke,S-CP-02,Cart Page,Visibility,Verify cart table headers,"1. Verify columns: Item, Description, Price, Quantity, Total, Remove",Table headers present
+Smoke,S-CP-03,Cart Page,Visibility,Verify checkout button,"1. Add item to cart 2. Go to cart 3. Verify Proceed to Checkout button",Checkout button visible
+Smoke,S-AP-01,Login/Signup,Visibility,Verify login/signup page loads,"1. Navigate to /login 2. Verify signup section 3. Verify login section",Auth page loads
+Smoke,S-AP-02,Login/Signup,Visibility,Verify signup form fields,"1. Verify name input 2. Verify email input 3. Verify signup button",Signup form complete
+Smoke,S-AP-03,Login/Signup,Visibility,Verify login form fields,"1. Verify email input 2. Verify password input 3. Verify login button",Login form complete
+Smoke,S-CU-01,Contact Us,Visibility,Verify contact page loads,"1. Navigate to /contact_us 2. Verify heading 3. Verify form",Contact page loads
+Smoke,S-CU-02,Contact Us,Visibility,Verify contact form fields,"1. Verify name, email, subject, message, file upload, submit button",Form fields complete

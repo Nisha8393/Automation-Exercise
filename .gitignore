@@ -1,0 +1,19 @@
+#env
+.env
+.env.*
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# /playwright/.auth/user.json
+/playwright/test-report/report.json
+
+
+
+
+
+
