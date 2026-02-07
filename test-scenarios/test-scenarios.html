@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Scenarios - Automation Exercise</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        h3 { color: #7f8c8d; margin-top: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 10px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #ecf0f1; }
+        .smoke { background-color: #e74c3c; color: white; padding: 3px 8px; border-radius: 3px; }
+        .regression { background-color: #f39c12; color: white; padding: 3px 8px; border-radius: 3px; }
+        .e2e { background-color: #27ae60; color: white; padding: 3px 8px; border-radius: 3px; }
+        .summary-table { width: 50%; }
+        .summary-table th { background-color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<h1>Test Scenarios Document</h1>
+<p><strong>Project:</strong> Automation Exercise (https://automationexercise.com/)</p>
+<p><strong>Date:</strong> January 2025</p>
+
+<hr>
+
+<h1><span class="regression">REGRESSION TESTS</span></h1>
+<p><em>Feature-specific tests - run before releases</em></p>
+
+<h2>Authentication Module</h2>
+
+<h3>Suite: Registration</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-AUTH-01</td><td>Register user with valid data</td><td>1. Go to /login<br>2. Enter name and email<br>3. Click Signup<br>4. Fill form<br>5. Click Create Account</td><td>Account created successfully</td></tr>
+    <tr><td>R-AUTH-02</td><td>Register with existing email</td><td>1. Go to /login<br>2. Enter registered email<br>3. Click Signup</td><td>Error: Email already exists</td></tr>
+    <tr><td>R-AUTH-03</td><td>Register with empty name</td><td>1. Go to /login<br>2. Leave name empty<br>3. Enter email<br>4. Click Signup</td><td>Validation error on name</td></tr>
+    <tr><td>R-AUTH-04</td><td>Register with invalid email format</td><td>1. Go to /login<br>2. Enter name<br>3. Enter invalid email<br>4. Click Signup</td><td>Validation error on email</td></tr>
+    <tr><td>R-AUTH-05</td><td>Register with empty required fields</td><td>1. Go to signup form<br>2. Leave fields empty<br>3. Click Create Account</td><td>Validation errors shown</td></tr>
+    <tr><td>R-AUTH-06</td><td>Verify account deletion</td><td>1. Login<br>2. Click Delete Account<br>3. Confirm</td><td>Account deleted</td></tr>
+</table>
+
+<h3>Suite: Login</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-AUTH-07</td><td>Login with valid credentials</td><td>1. Go to /login<br>2. Enter valid email/password<br>3. Click Login</td><td>Logged in successfully</td></tr>
+    <tr><td>R-AUTH-08</td><td>Login with incorrect password</td><td>1. Go to /login<br>2. Enter valid email<br>3. Enter wrong password<br>4. Click Login</td><td>Error: Incorrect credentials</td></tr>
+    <tr><td>R-AUTH-09</td><td>Login with incorrect email</td><td>1. Go to /login<br>2. Enter unregistered email<br>3. Enter password<br>4. Click Login</td><td>Error: Incorrect credentials</td></tr>
+    <tr><td>R-AUTH-10</td><td>Login with empty email</td><td>1. Go to /login<br>2. Leave email empty<br>3. Enter password<br>4. Click Login</td><td>Validation error</td></tr>
+    <tr><td>R-AUTH-11</td><td>Login with empty password</td><td>1. Go to /login<br>2. Enter email<br>3. Leave password empty<br>4. Click Login</td><td>Validation error</td></tr>
+    <tr><td>R-AUTH-12</td><td>Login with both fields empty</td><td>1. Go to /login<br>2. Leave both empty<br>3. Click Login</td><td>Validation errors</td></tr>
+</table>
+
+<h3>Suite: Logout</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-AUTH-13</td><td>Logout logged-in user</td><td>1. Login<br>2. Click Logout</td><td>Redirected to login page</td></tr>
+    <tr><td>R-AUTH-14</td><td>Verify session cleared after logout</td><td>1. Login<br>2. Add to cart<br>3. Logout<br>4. Check cart</td><td>Session ended</td></tr>
+</table>
+
+<h2>Products Module</h2>
+
+<h3>Suite: Products List</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-PROD-01</td><td>Verify all products page</td><td>1. Click Products nav link<br>2. Verify page loaded</td><td>Products list visible</td></tr>
+    <tr><td>R-PROD-02</td><td>Verify product card details</td><td>1. Go to products<br>2. Check first product</td><td>Image, name, price visible</td></tr>
+    <tr><td>R-PROD-03</td><td>Navigate to product detail</td><td>1. Go to products<br>2. Click View Product</td><td>Detail page opens</td></tr>
+    <tr><td>R-PROD-04</td><td>Verify product detail info</td><td>1. Go to product detail</td><td>Name, category, price, availability, condition, brand visible</td></tr>
+    <tr><td>R-PROD-05</td><td>Verify product quantity selector</td><td>1. Go to product detail<br>2. Check quantity input</td><td>Quantity input visible</td></tr>
+</table>
+
+<h3>Suite: Search</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-PROD-06</td><td>Search with valid keyword</td><td>1. Go to products<br>2. Enter "shirt"<br>3. Click search</td><td>Related products shown</td></tr>
+    <tr><td>R-PROD-07</td><td>Search with partial keyword</td><td>1. Search for "dre"</td><td>Products with "dress" shown</td></tr>
+    <tr><td>R-PROD-08</td><td>Search with no results</td><td>1. Search for "xyznonexistent"</td><td>No products or message shown</td></tr>
+    <tr><td>R-PROD-09</td><td>Search with special characters</td><td>1. Search for "@#$%"</td><td>Handled gracefully</td></tr>
+    <tr><td>R-PROD-10</td><td>Search with empty query</td><td>1. Leave search empty<br>2. Click search</td><td>All products or validation</td></tr>
+    <tr><td>R-PROD-11</td><td>Search case insensitivity</td><td>1. Search "SHIRT" vs "shirt"</td><td>Same results</td></tr>
+</table>
+
+<h3>Suite: Categories</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-PROD-12</td><td>Filter by Women category</td><td>1. Click Women<br>2. Click sub-category</td><td>Women products shown</td></tr>
+    <tr><td>R-PROD-13</td><td>Filter by Men category</td><td>1. Click Men<br>2. Click sub-category</td><td>Men products shown</td></tr>
+    <tr><td>R-PROD-14</td><td>Filter by Kids category</td><td>1. Click Kids<br>2. Click sub-category</td><td>Kids products shown</td></tr>
+    <tr><td>R-PROD-15</td><td>Verify category breadcrumb</td><td>1. Select a category</td><td>Breadcrumb shows category</td></tr>
+    <tr><td>R-PROD-16</td><td>Switch between categories</td><td>1. Select Women > Dress<br>2. Select Men > Jeans</td><td>Products update correctly</td></tr>
+</table>
+
+<h3>Suite: Brands</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-PROD-17</td><td>Filter by Polo brand</td><td>1. Click Polo in sidebar</td><td>Polo products shown</td></tr>
+    <tr><td>R-PROD-18</td><td>Filter by H&M brand</td><td>1. Click H&M in sidebar</td><td>H&M products shown</td></tr>
+    <tr><td>R-PROD-19</td><td>Filter by Madame brand</td><td>1. Click Madame in sidebar</td><td>Madame products shown</td></tr>
+    <tr><td>R-PROD-20</td><td>Filter by Babyhug brand</td><td>1. Click Babyhug in sidebar</td><td>Babyhug products shown</td></tr>
+    <tr><td>R-PROD-21</td><td>Switch between brands</td><td>1. Click Polo<br>2. Click H&M</td><td>Products update to H&M</td></tr>
+    <tr><td>R-PROD-22</td><td>Verify brand product count</td><td>1. Note count<br>2. Click brand</td><td>Products match count</td></tr>
+</table>
+
+<h3>Suite: Reviews</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-PROD-23</td><td>Add review on product</td><td>1. Go to detail<br>2. Enter name, email, review<br>3. Submit</td><td>Thank you message shown</td></tr>
+    <tr><td>R-PROD-24</td><td>Add review with empty fields</td><td>1. Go to detail<br>2. Leave empty<br>3. Submit</td><td>Validation errors</td></tr>
+    <tr><td>R-PROD-25</td><td>Verify review form visibility</td><td>1. Go to detail<br>2. Scroll to review</td><td>Write Your Review visible</td></tr>
+</table>
+
+<h2>Cart Module</h2>
+
+<h3>Suite: Add to Cart</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CART-01</td><td>Add product from products page</td><td>1. Go to products<br>2. Hover<br>3. Click Add to Cart</td><td>Product Added modal</td></tr>
+    <tr><td>R-CART-02</td><td>Add product from product detail</td><td>1. Go to detail<br>2. Click Add to Cart</td><td>Product Added modal</td></tr>
+    <tr><td>R-CART-03</td><td>Add product from homepage</td><td>1. Hover on featured product<br>2. Click Add to Cart</td><td>Product Added modal</td></tr>
+    <tr><td>R-CART-04</td><td>Add product from recommended items</td><td>1. Scroll to recommended<br>2. Click Add to Cart</td><td>Product Added modal</td></tr>
+    <tr><td>R-CART-05</td><td>Continue shopping after add</td><td>1. Add product<br>2. Click Continue Shopping</td><td>Modal closes</td></tr>
+    <tr><td>R-CART-06</td><td>View cart after add</td><td>1. Add product<br>2. Click View Cart</td><td>Navigate to cart</td></tr>
+    <tr><td>R-CART-07</td><td>Add multiple different products</td><td>1. Add Product A<br>2. Continue<br>3. Add Product B</td><td>Cart shows both</td></tr>
+    <tr><td>R-CART-08</td><td>Add same product twice</td><td>1. Add Product A<br>2. Add Product A again</td><td>Quantity increases</td></tr>
+</table>
+
+<h3>Suite: Quantity</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CART-09</td><td>Add product with quantity > 1</td><td>1. Go to detail<br>2. Set qty to 4<br>3. Add to cart<br>4. View cart</td><td>Cart shows qty 4</td></tr>
+    <tr><td>R-CART-10</td><td>Verify total price calculation</td><td>1. Add product (qty: 3)<br>2. View cart</td><td>Total = price × 3</td></tr>
+    <tr><td>R-CART-11</td><td>Verify cart subtotal</td><td>1. Add multiple products<br>2. View cart</td><td>Subtotal correct</td></tr>
+</table>
+
+<h3>Suite: Remove from Cart</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CART-12</td><td>Remove single product</td><td>1. Add product<br>2. Go to cart<br>3. Click X</td><td>Product removed</td></tr>
+    <tr><td>R-CART-13</td><td>Remove all products</td><td>1. Add multiple<br>2. Remove each</td><td>Cart empty</td></tr>
+    <tr><td>R-CART-14</td><td>Verify empty cart state</td><td>1. Remove all products</td><td>Empty state shown</td></tr>
+</table>
+
+<h2>Checkout Module</h2>
+
+<h3>Suite: Address</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CHK-01</td><td>Verify delivery address</td><td>1. Login<br>2. Add to cart<br>3. Checkout</td><td>Delivery address correct</td></tr>
+    <tr><td>R-CHK-02</td><td>Verify billing address</td><td>1. Login<br>2. Add to cart<br>3. Checkout</td><td>Billing address correct</td></tr>
+    <tr><td>R-CHK-03</td><td>Verify address format</td><td>1. Go to checkout</td><td>Full address details shown</td></tr>
+</table>
+
+<h3>Suite: Order Summary</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CHK-04</td><td>Verify order items</td><td>1. Add products<br>2. Checkout</td><td>All items shown</td></tr>
+    <tr><td>R-CHK-05</td><td>Verify order total</td><td>1. Add products<br>2. Checkout</td><td>Total matches cart</td></tr>
+    <tr><td>R-CHK-06</td><td>Add order comment</td><td>1. Checkout<br>2. Add comment</td><td>Comment accepted</td></tr>
+</table>
+
+<h2>Subscription Module</h2>
+
+<h3>Suite: Subscription</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-SUB-01</td><td>Subscribe from homepage</td><td>1. Scroll to footer<br>2. Enter email<br>3. Subscribe</td><td>Success message</td></tr>
+    <tr><td>R-SUB-02</td><td>Subscribe from cart page</td><td>1. Go to cart<br>2. Subscribe</td><td>Success message</td></tr>
+    <tr><td>R-SUB-03</td><td>Subscribe with invalid email</td><td>1. Enter invalid email<br>2. Subscribe</td><td>Validation error</td></tr>
+    <tr><td>R-SUB-04</td><td>Subscribe with empty email</td><td>1. Leave empty<br>2. Subscribe</td><td>Validation error</td></tr>
+</table>
+
+<h2>Contact Us Module</h2>
+
+<h3>Suite: Contact Form</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>R-CON-01</td><td>Submit contact form</td><td>1. Fill all fields<br>2. Upload file<br>3. Submit<br>4. Accept alert</td><td>Success message</td></tr>
+    <tr><td>R-CON-02</td><td>Submit without file</td><td>1. Fill fields except file<br>2. Submit</td><td>Form submits</td></tr>
+    <tr><td>R-CON-03</td><td>Submit with empty fields</td><td>1. Leave empty<br>2. Submit</td><td>Validation errors</td></tr>
+    <tr><td>R-CON-04</td><td>Verify home button after submit</td><td>1. Submit<br>2. Click Home</td><td>Navigate to homepage</td></tr>
+</table>
+
+<hr>
+
+<h1><span class="e2e">E2E TESTS</span></h1>
+<p><em>Complete user journeys - critical paths</em></p>
+
+<h2>Purchase Flows</h2>
+
+<h3>Suite: Register During Checkout</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-PO-01</td><td>Complete purchase with registration at checkout</td><td>1. Add products to cart<br>2. Go to cart<br>3. Click Proceed to Checkout<br>4. Click Register/Login<br>5. Register new account<br>6. Click Continue<br>7. Click Cart<br>8. Click Proceed to Checkout<br>9. Verify address<br>10. Add comment<br>11. Click Place Order<br>12. Enter payment details<br>13. Click Pay and Confirm<br>14. Verify success</td><td>Order Placed confirmation</td></tr>
+</table>
+
+<h3>Suite: Register Before Checkout</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-PO-02</td><td>Complete purchase after pre-registration</td><td>1. Go to signup<br>2. Register new account<br>3. Verify Account Created<br>4. Click Continue<br>5. Verify logged in<br>6. Add products to cart<br>7. Go to cart<br>8. Click Proceed to Checkout<br>9. Verify address<br>10. Add comment<br>11. Click Place Order<br>12. Enter payment details<br>13. Click Pay and Confirm<br>14. Verify success<br>15. Delete account</td><td>Order Placed confirmation</td></tr>
+</table>
+
+<h3>Suite: Login Before Checkout</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-PO-03</td><td>Complete purchase as existing user</td><td>1. Go to login<br>2. Login with valid credentials<br>3. Verify logged in<br>4. Add products to cart<br>5. Go to cart<br>6. Click Proceed to Checkout<br>7. Verify address<br>8. Add comment<br>9. Click Place Order<br>10. Enter payment details<br>11. Click Pay and Confirm<br>12. Verify success</td><td>Order Placed confirmation</td></tr>
+</table>
+
+<h2>Cart Persistence</h2>
+
+<h3>Suite: Cart After Login</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-CP-01</td><td>Verify cart persists after login</td><td>1. Search for products<br>2. Add searched products to cart<br>3. Verify cart<br>4. Click Signup/Login<br>5. Login with existing account<br>6. Go to cart</td><td>Cart still contains products added before login</td></tr>
+</table>
+
+<h2>Invoice</h2>
+
+<h3>Suite: Download Invoice</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-INV-01</td><td>Download invoice after purchase</td><td>1. Add products to cart<br>2. Go to cart<br>3. Proceed to checkout<br>4. Login/Register<br>5. Complete checkout<br>6. Enter payment details<br>7. Confirm order<br>8. Verify order confirmation<br>9. Click Download Invoice<br>10. Verify invoice downloaded<br>11. Click Continue</td><td>Invoice file downloaded successfully</td></tr>
+</table>
+
+<h2>User Journeys</h2>
+
+<h3>Suite: New User Journey</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-UJ-01</td><td>New user full shopping experience</td><td>1. Visit homepage<br>2. Browse categories<br>3. Search product<br>4. View product detail<br>5. Add to cart<br>6. Continue shopping<br>7. Add another product<br>8. View cart<br>9. Proceed to checkout<br>10. Register<br>11. Complete checkout<br>12. Download invoice<br>13. Delete account</td><td>Complete journey successful</td></tr>
+</table>
+
+<h3>Suite: Returning User Journey</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>E2E-UJ-02</td><td>Returning user shopping</td><td>1. Login<br>2. Browse by brand<br>3. Add products<br>4. Modify cart quantity<br>5. Remove one item<br>6. Checkout<br>7. Complete payment<br>8. Logout</td><td>Complete journey successful</td></tr>
+</table>
+
+<hr>
+
+<h1><span class="smoke">SMOKE TESTS</span></h1>
+<p><em>Quick sanity checks - run on every build</em></p>
+
+<h2>Homepage</h2>
+
+<h3>Suite: Visibility</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-HP-01</td><td>Verify homepage loads successfully</td><td>1. Navigate to homepage<br>2. Verify page title<br>3. Verify main content visible</td><td>Homepage loads with all sections visible</td></tr>
+    <tr><td>S-HP-02</td><td>Verify header section elements</td><td>1. Verify logo visible<br>2. Verify all nav links present</td><td>Logo and navigation links displayed</td></tr>
+    <tr><td>S-HP-03</td><td>Verify slider section</td><td>1. Verify slider visible<br>2. Verify prev/next buttons<br>3. Verify slider items</td><td>Slider section functional</td></tr>
+    <tr><td>S-HP-04</td><td>Verify category sidebar</td><td>1. Verify sidebar visible<br>2. Verify Women/Men/Kids categories</td><td>Categories displayed</td></tr>
+    <tr><td>S-HP-05</td><td>Verify brands sidebar</td><td>1. Verify brands section visible<br>2. Verify brand links</td><td>Brands displayed</td></tr>
+    <tr><td>S-HP-06</td><td>Verify featured products section</td><td>1. Verify section visible<br>2. Verify product cards<br>3. Verify images, prices, names</td><td>Featured products displayed</td></tr>
+    <tr><td>S-HP-07</td><td>Verify recommended items section</td><td>1. Scroll to section<br>2. Verify carousel<br>3. Verify items</td><td>Recommended items displayed</td></tr>
+    <tr><td>S-HP-08</td><td>Verify footer section</td><td>1. Scroll to footer<br>2. Verify subscription form<br>3. Verify copyright</td><td>Footer displayed</td></tr>
+</table>
+
+<h3>Suite: Interactions</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-HP-09</td><td>Verify product hover overlay</td><td>1. Hover on product card<br>2. Verify Add to Cart button<br>3. Verify View Product link</td><td>Overlay appears on hover</td></tr>
+    <tr><td>S-HP-10</td><td>Verify slider navigation</td><td>1. Click next button<br>2. Verify slide changes<br>3. Click prev<br>4. Verify slide changes</td><td>Slider navigates correctly</td></tr>
+    <tr><td>S-HP-11</td><td>Verify scroll up arrow button</td><td>1. Scroll to bottom<br>2. Verify arrow appears<br>3. Click arrow<br>4. Verify scrolled to top</td><td>Scroll up works</td></tr>
+    <tr><td>S-HP-12</td><td>Verify scroll up without arrow</td><td>1. Scroll to bottom<br>2. Scroll up manually<br>3. Verify top content visible</td><td>Manual scroll works</td></tr>
+</table>
+
+<h2>Products Page</h2>
+
+<h3>Suite: Visibility</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-PP-01</td><td>Verify products page loads</td><td>1. Navigate to /products<br>2. Verify title<br>3. Verify products list</td><td>Products page loads</td></tr>
+    <tr><td>S-PP-02</td><td>Verify search box</td><td>1. Verify search input<br>2. Verify search button</td><td>Search box visible</td></tr>
+    <tr><td>S-PP-03</td><td>Verify product cards structure</td><td>1. Verify image<br>2. Verify name<br>3. Verify price<br>4. Verify View Product button</td><td>Product cards complete</td></tr>
+</table>
+
+<h2>Cart Page</h2>
+
+<h3>Suite: Visibility</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-CP-01</td><td>Verify cart page loads</td><td>1. Navigate to /view_cart<br>2. Verify breadcrumb<br>3. Verify cart table/empty state</td><td>Cart page loads</td></tr>
+    <tr><td>S-CP-02</td><td>Verify cart table headers</td><td>1. Verify columns: Item, Description, Price, Quantity, Total, Remove</td><td>Table headers present</td></tr>
+    <tr><td>S-CP-03</td><td>Verify checkout button</td><td>1. Add item to cart<br>2. Go to cart<br>3. Verify Proceed to Checkout button</td><td>Checkout button visible</td></tr>
+</table>
+
+<h2>Login/Signup Page</h2>
+
+<h3>Suite: Visibility</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-AP-01</td><td>Verify login/signup page loads</td><td>1. Navigate to /login<br>2. Verify signup section<br>3. Verify login section</td><td>Auth page loads</td></tr>
+    <tr><td>S-AP-02</td><td>Verify signup form fields</td><td>1. Verify name input<br>2. Verify email input<br>3. Verify signup button</td><td>Signup form complete</td></tr>
+    <tr><td>S-AP-03</td><td>Verify login form fields</td><td>1. Verify email input<br>2. Verify password input<br>3. Verify login button</td><td>Login form complete</td></tr>
+</table>
+
+<h2>Contact Us Page</h2>
+
+<h3>Suite: Visibility</h3>
+<table>
+    <tr><th>Test ID</th><th>Scenario</th><th>Steps</th><th>Expected Result</th></tr>
+    <tr><td>S-CU-01</td><td>Verify contact page loads</td><td>1. Navigate to /contact_us<br>2. Verify heading<br>3. Verify form</td><td>Contact page loads</td></tr>
+    <tr><td>S-CU-02</td><td>Verify contact form fields</td><td>1. Verify name, email, subject, message, file upload, submit button</td><td>Form fields complete</td></tr>
+</table>
+
+<hr>
+
+<h1>Summary</h1>
+
+<table class="summary-table">
+    <tr><th>Test Type</th><th>Total Suites</th><th>Total Scenarios</th></tr>
+    <tr><td><span class="regression">Regression</span></td><td>15</td><td>67</td></tr>
+    <tr><td><span class="e2e">E2E</span></td><td>5</td><td>7</td></tr>
+    <tr><td><span class="smoke">Smoke</span></td><td>8</td><td>23</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>28</strong></td><td><strong>97</strong></td></tr>
+</table>
+
+</body>
+</html>
