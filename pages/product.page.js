@@ -21,6 +21,8 @@ export default class ProductsPage {
       name: "All Products",
     });
 
+    this.filterHeading = this.featuresItemsSection.locator("h2.title");
+
     this.productCards = this.featuresItemsSection.locator(
       ".product-image-wrapper",
     );
@@ -37,7 +39,7 @@ export default class ProductsPage {
       product.locator("h2:has-text('Rs.')").first();
     this.productName = (product) => product.locator("p").first();
     this.productAddToCartButton = (product) =>
-      product.locator("a.add-to-cart").first();
+      product.locator(".overlay-content a.add-to-cart");
     this.productViewProductLink = (product) =>
       product.locator("a[href*='product_details']").first();
 
@@ -147,6 +149,28 @@ export default class ProductsPage {
   async getProductCardsCount() {
     await this.featuresItemsSection.scrollIntoViewIfNeeded();
     return await this.productCards.count();
+  }
+
+  // ---------- VERIFICATION METHODS ----------
+  async verifyProductCardDetails(product) {
+    await expect(this.productImage(product)).toBeVisible();
+    await expect(this.productName(product)).toBeVisible();
+    await expect(this.productPrice(product)).toBeVisible();
+  }
+
+  async verifyCartModalShown(expectedTitle = "Added!") {
+    await expect(this.cartModal).toBeVisible();
+    await expect(this.cartModalTitle).toHaveText(expectedTitle);
+  }
+
+  async verifyFilterHeading(pattern) {
+    await expect(this.filterHeading).toBeVisible();
+    await expect(this.filterHeading).toContainText(pattern);
+  }
+
+  async verifyProductCount(expectedCount) {
+    const actualCount = await this.getProductCardsCount();
+    expect(actualCount).toBe(expectedCount);
   }
 
   // ----- get all products card -----

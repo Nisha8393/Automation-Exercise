@@ -76,7 +76,7 @@ test.describe("Login Tests", () => {
       await loginPage.verifyLoginErrorMessage(testData.expectedError);
     });
 
-    test("Login with invalid email format - Should not submit", async ({
+    test("Login with invalid email format - Shows browser email validation", async ({
       loginPage,
       isolatedPage,
     }) => {
@@ -86,16 +86,31 @@ test.describe("Login Tests", () => {
 
       // Should stay on same page due to browser validation
       await expect(isolatedPage).toHaveURL(/login/);
+
+      // Verify browser validation message on the invalid email input
+      // Chromium shows: "Please include an '@' in the email address. 'invalid-email' is missing an '@'."
+      const validationMsg = await loginPage.loginEmailInput.evaluate(
+        (el) => el.validationMessage,
+      );
+      expect(validationMsg).toContain(
+        "Please include an '@' in the email address.",
+      );
     });
 
-    test("Login with empty email and password - Should not submit", async ({
+    test("Login with empty email and password - Shows 'Please fill out this field.' validation", async ({
       loginPage,
       isolatedPage,
     }) => {
-      await loginPage.login("", "");
+      await loginPage.clickLogin();
 
       // Should stay on same page due to browser validation
       await expect(isolatedPage).toHaveURL(/login/);
+
+      // Verify browser validation message on the empty email input
+      const validationMsg = await loginPage.loginEmailInput.evaluate(
+        (el) => el.validationMessage,
+      );
+      expect(validationMsg).toBe("Please fill out this field.");
     });
   });
 });

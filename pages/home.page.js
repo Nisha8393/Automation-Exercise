@@ -50,7 +50,7 @@ export default class HomePage {
       product.locator("h2:has-text('Rs.')").first();
     this.productName = (product) => product.locator("p").first();
     this.productAddToCartButton = (product) =>
-      product.locator("a.add-to-cart").first();
+      product.locator(".overlay-content a.add-to-cart");
     this.productViewProductLink = (product) =>
       product.locator("a[href*='product_details']").first();
 

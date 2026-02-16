@@ -324,31 +324,66 @@ export default class CheckoutPage {
 
   async verifyDeliveryAddress(expectedAddress) {
     const name = await this.getDeliveryAddressName();
-    const lines = await this.getDeliveryAddressLines();
-    const cityStateZip = await this.getDeliveryAddressCityStateZip();
-    const country = await this.getDeliveryAddressCountry();
-    const phone = await this.getDeliveryAddressPhone();
+    expect(name).toContain(expectedAddress.name);
 
-    return (
-      name === expectedAddress.name &&
-      cityStateZip === expectedAddress.cityStateZip &&
-      country === expectedAddress.country &&
-      phone === expectedAddress.phone
+    const cityStateZip = (await this.getDeliveryAddressCityStateZip()).replace(
+      /\s+/g,
+      " ",
     );
+    expect(cityStateZip).toContain(expectedAddress.cityStateZip);
+
+    const country = await this.getDeliveryAddressCountry();
+    expect(country).toContain(expectedAddress.country);
+
+    const phone = await this.getDeliveryAddressPhone();
+    expect(phone).toContain(expectedAddress.phone);
   }
 
   async verifyBillingAddress(expectedAddress) {
     const name = await this.getBillingAddressName();
-    const lines = await this.getBillingAddressLines();
-    const cityStateZip = await this.getBillingAddressCityStateZip();
-    const country = await this.getBillingAddressCountry();
-    const phone = await this.getBillingAddressPhone();
+    expect(name).toContain(expectedAddress.name);
 
-    return (
-      name === expectedAddress.name &&
-      cityStateZip === expectedAddress.cityStateZip &&
-      country === expectedAddress.country &&
-      phone === expectedAddress.phone
+    const cityStateZip = (await this.getBillingAddressCityStateZip()).replace(
+      /\s+/g,
+      " ",
     );
+    expect(cityStateZip).toContain(expectedAddress.cityStateZip);
+
+    const country = await this.getBillingAddressCountry();
+    expect(country).toContain(expectedAddress.country);
+
+    const phone = await this.getBillingAddressPhone();
+    expect(phone).toContain(expectedAddress.phone);
+  }
+
+  async verifyAddressFieldsVisible() {
+    await expect(this.deliveryAddressName).toBeVisible();
+    await expect(this.deliveryAddressCityStateZip).toBeVisible();
+    await expect(this.deliveryAddressCountry).toBeVisible();
+    await expect(this.deliveryAddressPhone).toBeVisible();
+
+    await expect(this.billingAddressName).toBeVisible();
+    await expect(this.billingAddressCityStateZip).toBeVisible();
+    await expect(this.billingAddressCountry).toBeVisible();
+    await expect(this.billingAddressPhone).toBeVisible();
+  }
+
+  async verifyOrderHasItems() {
+    const itemCount = await this.getCartItemsCount();
+    expect(itemCount).toBeGreaterThan(0);
+
+    const productIds = await this.getAllProductIds();
+    expect(productIds.length).toBeGreaterThan(0);
+  }
+
+  async verifyTotalAmount() {
+    const totalAmount = await this.getTotalAmount();
+    expect(totalAmount).toBeTruthy();
+    expect(totalAmount).toContain("Rs.");
+  }
+
+  async verifyOrderMessage(expectedMessage) {
+    const savedMessage = await this.getOrderMessage();
+    expect(savedMessage).toBe(expectedMessage);
   }
 }
