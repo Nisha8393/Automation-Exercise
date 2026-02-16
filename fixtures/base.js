@@ -10,6 +10,9 @@ import ProductsPage from "../pages/product.page.js";
 import ProductDetailsPage from "../pages/productDetails.page.js";
 import ViewCartPage from "../pages/viewCart.page.js";
 import CheckoutPage from "../pages/checkout.page.js";
+import RegisterPage from "../pages/register.page.js";
+import ContactUsPage from "../pages/contactUs.page.js";
+import AccountCreatedPage from "../pages/accountCreated.page.js";
 import PaymentPage from "../pages/payment.page.js";
 import PaymentDonePage from "../pages/orderConfirmation.page.js";
 
@@ -69,6 +72,15 @@ export const test = base.extend({
   },
   paymentDonePage: async ({ isolatedPage }, use) => {
     await use(new PaymentDonePage(isolatedPage));
+  },
+  registerPage: async ({ isolatedPage }, use) => {
+    await use(new RegisterPage(isolatedPage));
+  },
+  contactUsPage: async ({ isolatedPage }, use) => {
+    await use(new ContactUsPage(isolatedPage));
+  },
+  accountCreatedPage: async ({ isolatedPage }, use) => {
+    await use(new AccountCreatedPage(isolatedPage));
   },
 
   // ============================================================================

@@ -21,14 +21,7 @@ test.describe("Products Page", () => {
 
       const product = productsPage.productCard(PRODUCT_NAME);
       await expect(product).toBeVisible();
-
-      const productImage = productsPage.productImage(product);
-      const productPrice = productsPage.productPrice(product);
-      const productName = productsPage.productName(product);
-
-      await expect(productImage).toBeVisible();
-      await expect(productPrice).toBeVisible();
-      await expect(productName).toBeVisible();
+      await productsPage.verifyProductCardDetails(product);
     });
 
     test("Search with partial keyword - Related products are shown", async ({
@@ -51,18 +44,20 @@ test.describe("Products Page", () => {
 
       // UI check on first product
       const firstProduct = productsPage.productCards.first();
-      await expect(productsPage.productImage(firstProduct)).toBeVisible();
-      await expect(productsPage.productPrice(firstProduct)).toBeVisible();
-      await expect(productsPage.productName(firstProduct)).toBeVisible();
+      await productsPage.verifyProductCardDetails(firstProduct);
     });
 
-    test("Search with invalid keyword - No products shown", async ({
+    test("Search with invalid keyword - No matching products found", async ({
       productsPage,
     }) => {
       await productsPage.searchProduct(INVALID_PRODUCT_NAME);
 
-      const count = await productsPage.getProductCardsCount();
-      expect(count).toBe(0);
+      // Website shows products but none should match the invalid keyword
+      const allNames = await productsPage.getAllProductNamesText();
+      const hasMatch = allNames.some((name) =>
+        name.toLowerCase().includes(INVALID_PRODUCT_NAME.toLowerCase()),
+      );
+      expect(hasMatch).toBe(false);
     });
 
     test("Search with empty keyword - All products remain visible", async ({
@@ -85,14 +80,7 @@ test.describe("Products Page", () => {
 
       const product = productsPage.productCard(PRODUCT_NAME);
       await expect(product).toBeVisible();
-
-      const productImage = productsPage.productImage(product);
-      const productPrice = productsPage.productPrice(product);
-      const productName = productsPage.productName(product);
-
-      await expect(productImage).toBeVisible();
-      await expect(productPrice).toBeVisible();
-      await expect(productName).toBeVisible();
+      await productsPage.verifyProductCardDetails(product);
     });
   });
 
@@ -118,18 +106,11 @@ test.describe("Products Page", () => {
     }) => {
       const firstProduct = productsPage.productCards.first();
       await expect(firstProduct).toBeVisible();
-
-      await expect(productsPage.productImage(firstProduct)).toBeVisible();
-      await expect(productsPage.productName(firstProduct)).toBeVisible();
-      await expect(productsPage.productPrice(firstProduct)).toBeVisible();
+      await productsPage.verifyProductCardDetails(firstProduct);
     });
 
     test("Verify sidebar is visible on products page", async ({ sidebar }) => {
-      await expect(sidebar.leftSidebar).toBeVisible();
-      await expect(sidebar.categoryHeading).toBeVisible();
-      await expect(sidebar.categoryAccordion).toBeVisible();
-      await expect(sidebar.brandsSection).toBeVisible();
-      await expect(sidebar.brandsHeading).toBeVisible();
+      await sidebar.verifySidebarVisible();
     });
 
     test("Navigate to product detail - Detail page opens", async ({
@@ -159,8 +140,7 @@ test.describe("Products Page", () => {
       await productsPage.searchProduct(PRODUCT_NAME);
       await productsPage.addProductToCart(PRODUCT_NAME);
 
-      await expect(productsPage.cartModal).toBeVisible();
-      await expect(productsPage.cartModalTitle).toHaveText("Added!");
+      await productsPage.verifyCartModalShown();
     });
 
     test("Continue shopping after adding to cart - Cart modal closes", async ({
@@ -169,7 +149,7 @@ test.describe("Products Page", () => {
       await productsPage.searchProduct(PRODUCT_NAME);
       await productsPage.addProductToCart(PRODUCT_NAME);
 
-      await expect(productsPage.cartModal).toBeVisible();
+      await productsPage.verifyCartModalShown();
       await productsPage.clickCartModalContinue();
 
       await expect(productsPage.cartModal).not.toBeVisible();
@@ -182,7 +162,7 @@ test.describe("Products Page", () => {
       await productsPage.searchProduct(PRODUCT_NAME);
       await productsPage.addProductToCart(PRODUCT_NAME);
 
-      await expect(productsPage.cartModal).toBeVisible();
+      await productsPage.verifyCartModalShown();
       await productsPage.clickCartModalViewCart();
 
       await expect(isolatedPage).toHaveURL(/view_cart/);

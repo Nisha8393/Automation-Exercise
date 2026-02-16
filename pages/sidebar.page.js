@@ -50,13 +50,20 @@ export default class SidebarPage {
 
   // ---------- CATEGORY ACTIONS ----------
   async clickCategory(categoryName) {
-    await this.leftSidebar.scrollIntoViewIfNeeded();
+    const panel = this.categoryPanel(categoryName);
+
+    // Skip click if panel is already expanded
+    if (await panel.isVisible()) return;
+
+    // Ensure Bootstrap collapse plugin is loaded before clicking
+    await this.page.waitForLoadState("load");
 
     const category = this.categoryLink(categoryName);
+    await category.scrollIntoViewIfNeeded();
     await expect(category).toBeVisible();
     await category.click();
 
-    await expect(this.categoryPanel(categoryName)).toBeVisible();
+    await expect(panel).toBeVisible();
   }
 
   async clickSubCategory(categoryName, subCategoryName) {
@@ -70,7 +77,24 @@ export default class SidebarPage {
     await subCategory.click();
   }
 
+  // ---------- VERIFICATION METHODS ----------
+  async verifySidebarVisible() {
+    await expect(this.leftSidebar).toBeVisible();
+    await expect(this.categoryHeading).toBeVisible();
+    await expect(this.categoryAccordion).toBeVisible();
+    await expect(this.brandsSection).toBeVisible();
+    await expect(this.brandsHeading).toBeVisible();
+  }
+
   // ---------- BRAND ACTIONS ----------
+  async getBrandCount(brandName) {
+    await this.brandsSection.scrollIntoViewIfNeeded();
+    const brand = this.brandLink(brandName);
+    await expect(brand).toBeVisible();
+    const countText = await brand.locator("span.pull-right").textContent();
+    return parseInt(countText.replace(/[()]/g, ""), 10);
+  }
+
   async clickBrand(brandName) {
     await this.brandsSection.scrollIntoViewIfNeeded();
     const brand = this.brandLink(brandName);
