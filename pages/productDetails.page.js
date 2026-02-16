@@ -37,10 +37,7 @@ export default class ProductDetailPage {
     );
 
     // Price and Add to Cart
-    this.productPriceText = this.productInformation
-      .locator("span")
-      .filter({ hasText: /Rs\./ })
-      .first();
+    this.productPriceText = this.productInformation.locator("span > span");
     this.quantityLabel = this.productInformation.getByText("Quantity:");
     this.quantityInput = this.productInformation.locator("#quantity");
     this.productIdInput = this.productInformation.locator("#product_id");
@@ -238,5 +235,15 @@ export default class ProductDetailPage {
 
   async isReviewSuccessVisible() {
     return await this.reviewSuccessAlert.isVisible();
+  }
+
+  async verifyReviewFormVisible() {
+    await expect(this.reviewTabLink).toBeVisible();
+    await expect(this.reviewTabLink).toContainText("Write Your Review");
+    await expect(this.reviewForm).toBeVisible();
+    await expect(this.reviewNameInput).toBeVisible();
+    await expect(this.reviewEmailInput).toBeVisible();
+    await expect(this.reviewTextArea).toBeVisible();
+    await expect(this.reviewSubmitButton).toBeVisible();
   }
 }

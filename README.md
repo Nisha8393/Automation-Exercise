@@ -1,78 +1,78 @@
-# 🧪 Playwright Testing Guide
+# Automation Exercise - Playwright Test Suite
 
-A quick reference for running Playwright tests with various configurations and environment setups.
+End-to-end test automation for [automationexercise.com](https://automationexercise.com) using Playwright with the Page Object Model pattern.
 
 ---
 
-## 🚀 Common Commands
+## Project Structure
 
-npm run test your-test-file.spec.js
-
-## Staging Env
-
-npm run test:stage your-test-file.spec.js
-
-### 🎥 Record Tests
-
-```bash
-npx playwright codegen
+```
+├── fixtures/           # Playwright test fixtures (base.js)
+├── pages/              # Page Object Models
+├── tests/
+│   ├── smoke/          # Visibility & UI element checks
+│   ├── regression/     # Functional regression tests
+│   │   ├── auth/       # Login, registration
+│   │   ├── cart/       # Add to cart, cart management
+│   │   ├── checkout/   # Checkout flow
+│   │   ├── contactUs/  # Contact us form
+│   │   ├── products/   # Products, details, search, brands, categories, reviews
+│   │   └── subscription/ # Newsletter subscription
+│   └── e2e/            # End-to-end flows
+├── utils/
+│   ├── helper/         # Data generators, network helpers
+│   └── testData/       # Test data files
+└── scripts/            # Custom reporters (Excel)
 ```
 
-### 🧪 Run Tests in UI Mode
+## Setup
 
 ```bash
+npm install
+npx playwright install
+```
+
+## Running Tests
+
+```bash
+# Run all tests
+npx playwright test
+
+# Run a specific test file
+npx playwright test tests/regression/auth/login.spec.js
+
+# Run tests in a specific folder
+npx playwright test tests/regression/products/
+
+# Run in headed mode (visible browser)
+npx playwright test --headed
+
+# Run in UI mode (interactive)
 npx playwright test --ui
+
+# Run in debug mode
+npx playwright test --debug
 ```
 
-### 🔍 Run a Specific Test File
+## npm Scripts
 
 ```bash
-npx playwright test your-test-file.spec.js
+npm run test          # Run all tests
+npm run test:ui       # Run in UI mode
+npm run test:debug    # Run in debug mode
 ```
 
-### 🖥️ Run Tests with GUI
+## Configuration
 
-```bash
-npx playwright test --headed 
-```
+Test configuration is in `playwright.config.js`:
 
-> **Note:** Adding `--workers=3` helps avoid rate limiting during test runs.
+- **Browser**: Chromium (Desktop Chrome)
+- **Base URL**: https://automationexercise.com
+- **Screenshots**: Captured on failure
+- **Workers**: 1 (sequential to avoid rate limiting)
+- **Retries**: 2 on CI, 0 locally
 
----
+## Reports
 
-## 🔐 .env Configuration
-
-Set the following environment variables in your `.env` file:
-
-```env
-EMAIL=your_email@example.com
-PASSWORD=your_password
-
-INTERNAL_URL=https://internal.example[-dev|-staging].com
-DASHBOARD_URL=https://app.example[-dev|-staging].com
-OSPRO_URL=https://ospro[-d|-s].co
-
-APP_URL=https://internal.[dv|st|v2].os-track.com
-APP_ORIGIN=https://app.[dev|staging].os-track.com
-
-ACCOUNT_ID=your_core_account_id
-APP_ID=your_track_app_id
-```
-
-> Replace placeholders with your actual environment values.
-
----
-
-## 📸 Test Recording & Screenshots
-
-To enable screenshots or video recording, configure your `playwright.config.js` or specify in individual tests using
-`test.use`.
-
-```js
-use: {
-      // screenshot: 'only-on-failure', // options: 'on', 'off', 'only-on-failure'
-      // video: 'on',                   // options: 'on', 'off', 'only-on-failure'
-}
-```
-
-Uncomment and adjust based on your use case.
+- **HTML Report**: Opens automatically after test run
+- **Excel Report**: Generated via custom reporter in `scripts/`

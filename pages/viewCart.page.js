@@ -227,6 +227,69 @@ export default class ViewCartPage {
     return productIds;
   }
 
+  // ---------- VERIFICATION METHODS ----------
+  async verifyProductName(productId, expectedName) {
+    const actualName = await this.getProductNameByProductId(productId);
+    expect(actualName).toBe(expectedName);
+  }
+
+  async verifyProductQuantity(productId, expectedQuantity) {
+    const actualQuantity = await this.getProductQuantityByProductId(productId);
+    expect(actualQuantity).toBe(expectedQuantity);
+  }
+
+  async verifyCartContainsProducts(expectedNames) {
+    const productIds = await this.getAllProductIds();
+    const cartNames = [];
+    for (const id of productIds) {
+      const name = await this.getProductNameByProductId(id);
+      cartNames.push(name);
+    }
+    for (const expectedName of expectedNames) {
+      expect(cartNames).toContain(expectedName);
+    }
+  }
+
+  async verifyCartItemsCount(expectedCount) {
+    const actualCount = await this.getCartItemsCount();
+    expect(actualCount).toBe(expectedCount);
+  }
+
+  async verifyCheckoutModal() {
+    await expect(this.checkoutModal).toBeVisible();
+    await expect(this.checkoutModalTitle).toHaveText("Checkout");
+    await expect(this.checkoutModalMessage).toHaveText(
+      "Register / Login account to proceed on checkout.",
+    );
+    await expect(this.checkoutModalRegisterLoginLink).toBeVisible();
+    await expect(this.checkoutModalRegisterLoginLink).toHaveText(
+      "Register / Login",
+    );
+    await expect(this.checkoutModalRegisterLoginLink).toHaveAttribute(
+      "href",
+      "/login",
+    );
+    await expect(this.checkoutModalContinueButton).toBeVisible();
+    await expect(this.checkoutModalContinueButton).toHaveText(
+      "Continue On Cart",
+    );
+  }
+
+  async verifyEmptyCartState() {
+    await expect(this.emptyCartMessage).toBeVisible();
+    await expect(this.emptyCartMessage).toContainText(
+      "Cart is empty! Click here to buy products.",
+    );
+    await expect(this.emptyCartBuyProductsLink).toBeVisible();
+    await expect(this.emptyCartBuyProductsLink).toHaveText("here");
+  }
+
+  async verifyProductTotalPrice(productId, expectedTotal) {
+    const totalText = await this.getProductTotalByProductId(productId);
+    const total = parseInt(totalText.replace(/[^\d]/g, ""), 10);
+    expect(total).toBe(expectedTotal);
+  }
+
   async calculateCartTotal() {
     await this.cartInfo.scrollIntoViewIfNeeded();
     if (await this.isCartEmpty()) {
