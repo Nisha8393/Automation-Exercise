@@ -1,6 +1,6 @@
 import { test, expect } from "../../../fixtures/base.js";
 
-test.describe("HomePage - User Interactions", () => {
+test.describe("HomePage - User Interactions", { tag: "@smoke" }, () => {
   // Site opens ONCE in the fixture, then we just click logo to return home
   test.beforeEach(async ({ homePage, headerSection }) => {
     const currentUrl = homePage.page.url();

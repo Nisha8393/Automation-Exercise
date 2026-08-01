@@ -8,10 +8,11 @@ export default class ProductsPage {
     // ADVERTISEMENT SECTION (SEARCH)
     // =========================
     this.advertisementSection = this.page.locator("#advertisement");
-    this.saleImage = this.advertisementSection.locator("#sale_image");
-    this.searchProductInput =
-      this.advertisementSection.locator("#search_product");
-    this.searchButton = this.advertisementSection.locator("#submit_search");
+    this.saleImage = this.advertisementSection.getByRole("img");
+    this.searchProductInput = this.advertisementSection.getByRole("textbox", {
+      name: "Search Product",
+    });
+    this.searchButton = this.advertisementSection.getByRole("button");
 
     // =========================
     // PRODUCTS SECTION
@@ -21,7 +22,10 @@ export default class ProductsPage {
       name: "All Products",
     });
 
-    this.filterHeading = this.featuresItemsSection.locator("h2.title");
+    // Section title: "All Products", "Searched Products", "Brand - Polo Products", ...
+    this.filterHeading = this.featuresItemsSection.getByRole("heading", {
+      name: /products$/i,
+    });
 
     this.productCards = this.featuresItemsSection.locator(
       ".product-image-wrapper",
@@ -33,27 +37,32 @@ export default class ProductsPage {
         has: this.page.locator("p", { hasText: productName }),
       });
 
-    // Product elements (strict safe with .first())
-    this.productImage = (product) => product.locator("img").first();
+    // Product elements - cards repeat name/price in a hover overlay, hence .first()
+    this.productImage = (product) => product.getByRole("img").first();
     this.productPrice = (product) =>
-      product.locator("h2:has-text('Rs.')").first();
+      product.getByRole("heading", { name: /^Rs\./ }).first();
     this.productName = (product) => product.locator("p").first();
+
+    // "Add to cart" is an <a> without href, so it has no link role
     this.productAddToCartButton = (product) =>
       product.locator(".overlay-content a.add-to-cart");
+
     this.productViewProductLink = (product) =>
-      product.locator("a[href*='product_details']").first();
+      product.getByRole("link", { name: "View Product" }).first();
 
     // =========================
     // CART MODAL
     // =========================
     this.cartModal = this.page.locator("#cartModal");
     this.cartModalIcon = this.cartModal.locator(".icon-box i").first();
-    this.cartModalTitle = this.cartModal.locator(".modal-title").first();
-    this.cartModalMessage = this.cartModal.locator(".modal-body p").first();
+    this.cartModalTitle = this.cartModal.getByRole("heading");
+    this.cartModalMessage = this.cartModal.getByRole("paragraph").first();
     this.cartModalViewCartLink = this.cartModal.getByRole("link", {
-      name: /View Cart/i,
+      name: "View Cart",
     });
-    this.cartModalContinueButton = this.cartModal.locator("button.close-modal");
+    this.cartModalContinueButton = this.cartModal.getByRole("button", {
+      name: "Continue Shopping",
+    });
   }
 
   // =================================================

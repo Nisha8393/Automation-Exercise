@@ -5,7 +5,7 @@ export default class FooterSection {
     this.page = page;
 
     // Main footer container
-    this.footer = this.page.locator("#footer");
+    this.footer = this.page.getByRole("contentinfo");
 
     // Footer widget section
     this.footerWidget = this.footer.locator(".footer-widget");
@@ -16,10 +16,12 @@ export default class FooterSection {
 
     // Subscription form
     this.subscriptionForm = this.subscriptionSection.locator("form.searchform");
-    this.subscriptionEmailInput =
-      this.subscriptionForm.locator("#susbscribe_email");
-    this.subscriptionSubmitButton = this.subscriptionForm.locator("#subscribe");
-    this.subscriptionDescriptionText = this.subscriptionForm.locator("p");
+    this.subscriptionEmailInput = this.subscriptionForm.getByRole("textbox", {
+      name: "Your email address",
+    });
+    this.subscriptionSubmitButton = this.subscriptionForm.getByRole("button");
+    this.subscriptionDescriptionText =
+      this.subscriptionForm.getByRole("paragraph");
 
     // Success message
     this.subscriptionSuccessMessage =
@@ -29,7 +31,7 @@ export default class FooterSection {
 
     // Footer bottom
     this.footerBottom = this.footer.locator(".footer-bottom");
-    this.copyrightText = this.footerBottom.locator("p.pull-left");
+    this.copyrightText = this.footerBottom.getByText(/Copyright/i);
   }
 
   // ============================================================================

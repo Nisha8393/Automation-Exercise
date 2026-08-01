@@ -2,7 +2,7 @@ import { test, expect } from "../../../fixtures/base.js";
 import { signupTestData } from "../../../utils/testData/auth.data.js";
 import { DataGenerator } from "../../../utils/helper/dataGenerator.js";
 
-test.describe("Registration Tests", () => {
+test.describe("Registration Tests", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header }) => {
     await header.clickLoginSignup();
   });

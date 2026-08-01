@@ -1,7 +1,7 @@
 import { test, expect } from "../../../fixtures/base.js";
 import { loginTestData } from "../../../utils/testData/auth.data.js";
 
-test.describe("Login Tests", () => {
+test.describe("Login Tests", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header }) => {
     await header.clickLoginSignup();
   });

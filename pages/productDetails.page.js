@@ -9,12 +9,14 @@ export default class ProductDetailPage {
     // =========================
     this.cartModal = this.page.locator("#cartModal");
     this.cartModalIcon = this.cartModal.locator(".icon-box i").first();
-    this.cartModalTitle = this.cartModal.locator(".modal-title").first();
-    this.cartModalMessage = this.cartModal.locator(".modal-body p").first();
+    this.cartModalTitle = this.cartModal.getByRole("heading");
+    this.cartModalMessage = this.cartModal.getByRole("paragraph").first();
     this.cartModalViewCartLink = this.cartModal.getByRole("link", {
-      name: /View Cart/i,
+      name: "View Cart",
     });
-    this.cartModalContinueButton = this.cartModal.locator("button.close-modal");
+    this.cartModalContinueButton = this.cartModal.getByRole("button", {
+      name: "Continue Shopping",
+    });
 
     // =========================
     // PRODUCT DETAILS SECTION
@@ -23,35 +25,42 @@ export default class ProductDetailPage {
 
     // Product Image
     this.viewProduct = this.productDetailsSection.locator(".view-product");
-    this.productImage = this.viewProduct.locator("img");
+    this.productImage = this.viewProduct.getByRole("img");
 
     // Product Information
     this.productInformation = this.productDetailsSection.locator(
       ".product-information",
     );
     this.newArrivalBadge = this.productInformation.locator("img.newarrival");
-    this.productNameHeading = this.productInformation.locator("h2");
-    this.productCategoryText = this.productInformation.locator("p").first();
+    this.productNameHeading = this.productInformation.getByRole("heading", {
+      level: 2,
+    });
+    this.productCategoryText = this.productInformation
+      .getByRole("paragraph")
+      .first();
     this.ratingImage = this.productInformation.locator(
       "img[src*='rating.png']",
     );
 
-    // Price and Add to Cart
+    // Price sits in a bare <span>, so there is no role to target
     this.productPriceText = this.productInformation.locator("span > span");
+
     this.quantityLabel = this.productInformation.getByText("Quantity:");
-    this.quantityInput = this.productInformation.locator("#quantity");
+    this.quantityInput = this.productInformation.getByRole("spinbutton");
     this.productIdInput = this.productInformation.locator("#product_id");
-    this.addToCartButton = this.productInformation.locator("button.cart");
+    this.addToCartButton = this.productInformation.getByRole("button", {
+      name: "Add to cart",
+    });
 
     // Product Details
     this.availabilityText = this.productInformation
-      .locator("p")
+      .getByRole("paragraph")
       .filter({ hasText: /Availability:/ });
     this.conditionText = this.productInformation
-      .locator("p")
+      .getByRole("paragraph")
       .filter({ hasText: /Condition:/ });
     this.brandText = this.productInformation
-      .locator("p")
+      .getByRole("paragraph")
       .filter({ hasText: /Brand:/ });
 
     // =========================
@@ -59,15 +68,23 @@ export default class ProductDetailPage {
     // =========================
     this.categoryTab = this.page.locator(".category-tab");
     this.reviewTabLink = this.categoryTab.getByRole("link", {
-      name: /Write Your Review/i,
+      name: "Write Your Review",
     });
 
     // Review Form
     this.reviewForm = this.page.locator("#review-form");
-    this.reviewNameInput = this.reviewForm.locator("#name");
-    this.reviewEmailInput = this.reviewForm.locator("#email");
-    this.reviewTextArea = this.reviewForm.locator("#review");
-    this.reviewSubmitButton = this.reviewForm.locator("#button-review");
+    this.reviewNameInput = this.reviewForm.getByRole("textbox", {
+      name: "Your Name",
+    });
+    this.reviewEmailInput = this.reviewForm.getByRole("textbox", {
+      name: "Email Address",
+    });
+    this.reviewTextArea = this.reviewForm.getByRole("textbox", {
+      name: "Add Review Here!",
+    });
+    this.reviewSubmitButton = this.reviewForm.getByRole("button", {
+      name: "Submit",
+    });
 
     // Review Success Message
     this.reviewSuccessSection = this.reviewForm.locator("#review-section");

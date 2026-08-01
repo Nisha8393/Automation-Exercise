@@ -1,6 +1,6 @@
 import { test, expect } from "../../../fixtures/base.js";
 
-test.describe.serial("HomePage - Visibility Tests", () => {
+test.describe.serial("HomePage - Visibility Tests", { tag: "@smoke" }, () => {
   // ======================================================
   // HEADER SECTION
   // ======================================================

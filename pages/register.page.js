@@ -22,25 +22,41 @@ export default class RegisterPage {
     });
 
     // Title Radio Buttons
-    this.titleMr = this.loginFormContainer.locator("input#id_gender1");
-    this.titleMrs = this.loginFormContainer.locator("input#id_gender2");
+    this.titleMr = this.loginFormContainer.getByRole("radio", {
+      name: "Mr.",
+      exact: true,
+    });
+    this.titleMrs = this.loginFormContainer.getByRole("radio", {
+      name: "Mrs.",
+      exact: true,
+    });
 
-    // Name / Email / Password
-    this.nameInput = this.loginFormContainer.locator("input[name='name']");
-    this.emailInput = this.loginFormContainer.locator("input[name='email']");
-    this.passwordInput = this.loginFormContainer.locator(
-      "input[name='password']",
-    );
+    // Name / Email / Password (labels end with a "*" marker)
+    this.nameInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Name *",
+      exact: true,
+    });
+    this.emailInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Email *",
+      exact: true,
+    });
+    this.passwordInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Password *",
+      exact: true,
+    });
 
-    // Date of Birth Selectors
+    // Date of Birth selectors have no label, so they are targeted by id
     this.daySelect = this.loginFormContainer.locator("select#days");
     this.monthSelect = this.loginFormContainer.locator("select#months");
     this.yearSelect = this.loginFormContainer.locator("select#years");
 
     // Newsletter / Offers Checkboxes
-    this.newsletterCheckbox =
-      this.loginFormContainer.locator("input#newsletter");
-    this.optinCheckbox = this.loginFormContainer.locator("input#optin");
+    this.newsletterCheckbox = this.loginFormContainer.getByRole("checkbox", {
+      name: "Sign up for our newsletter!",
+    });
+    this.optinCheckbox = this.loginFormContainer.getByRole("checkbox", {
+      name: "Receive special offers from our partners!",
+    });
 
     // =========================
     // ADDRESS SECTION
@@ -49,23 +65,49 @@ export default class RegisterPage {
       name: "Address Information",
     });
 
-    this.firstNameInput = this.loginFormContainer.locator("input#first_name");
-    this.lastNameInput = this.loginFormContainer.locator("input#last_name");
-    this.companyInput = this.loginFormContainer.locator("input#company");
-    this.address1Input = this.loginFormContainer.locator("input#address1");
-    this.address2Input = this.loginFormContainer.locator("input#address2");
-    this.countrySelect = this.loginFormContainer.locator("select#country");
-    this.stateInput = this.loginFormContainer.locator("input#state");
-    this.cityInput = this.loginFormContainer.locator("input#city");
+    this.firstNameInput = this.loginFormContainer.getByRole("textbox", {
+      name: "First name *",
+      exact: true,
+    });
+    this.lastNameInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Last name *",
+      exact: true,
+    });
+    this.companyInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Company",
+      exact: true,
+    });
+    this.address1Input = this.loginFormContainer.getByRole("textbox", {
+      name: /^Address \*/,
+    });
+    this.address2Input = this.loginFormContainer.getByRole("textbox", {
+      name: "Address 2",
+      exact: true,
+    });
+    this.countrySelect = this.loginFormContainer.getByRole("combobox", {
+      name: /^Country/,
+    });
+    this.stateInput = this.loginFormContainer.getByRole("textbox", {
+      name: "State *",
+      exact: true,
+    });
+
+    // The site points both City and Zipcode labels at the City input, so the
+    // City name swallows "Zipcode *" and the Zipcode field has no name at all
+    this.cityInput = this.loginFormContainer.getByRole("textbox", {
+      name: /^City \*/,
+    });
     this.zipcodeInput = this.loginFormContainer.locator("input#zipcode");
-    this.mobileNumberInput = this.loginFormContainer.locator(
-      "input#mobile_number",
-    );
+
+    this.mobileNumberInput = this.loginFormContainer.getByRole("textbox", {
+      name: "Mobile Number *",
+      exact: true,
+    });
 
     // Submit button
-    this.createAccountButton = this.loginFormContainer.locator(
-      "button[data-qa='create-account']",
-    );
+    this.createAccountButton = this.loginFormContainer.getByRole("button", {
+      name: "Create Account",
+    });
   }
 
   // =================================================

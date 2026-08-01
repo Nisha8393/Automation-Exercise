@@ -5,44 +5,31 @@ export default class HeaderSection {
     this.page = page;
 
     // Main header container
-    this.header = this.page.locator("#header");
+    this.header = this.page.getByRole("banner");
 
-    // Logo section
+    // Logo section (alt text changes when logged in, so scope by class)
     this.logoContainer = this.header.locator(".logo");
-    this.logoImage = this.logoContainer.locator("img");
-    this.logoLink = this.logoContainer.locator("a");
+    this.logoImage = this.logoContainer.getByRole("img");
+    this.logoLink = this.logoContainer.getByRole("link");
 
     // Navigation menu
-    this.shopMenu = this.header.locator(".shop-menu");
-    this.navMenu = this.shopMenu.locator("ul.nav.navbar-nav");
+    this.navMenu = this.header.getByRole("list");
 
     // Dynamic navigation links
     this.navLink = (linkText) =>
-      this.navMenu.getByRole("link", { name: new RegExp(linkText, "i") });
+      this.navMenu.getByRole("link", { name: linkText });
 
     // Specific navigation links for common use
-    this.homeLink = this.navMenu.getByRole("link", { name: /Home/i });
-    this.productsLink = this.navMenu.getByRole("link", { name: /Products/i });
-    this.cartLink = this.navMenu.getByRole("link", { name: /Cart/i });
-    this.loginSignupLink = this.navMenu.getByRole("link", {
-      name: /Signup \/ Login/i,
-    });
-    this.logoutLink = this.navMenu.getByRole("link", { name: /Logout/i });
-    this.deleteAccountLink = this.navMenu.getByRole("link", {
-      name: /Delete Account/i,
-    });
-    this.testCasesLink = this.navMenu.getByRole("link", {
-      name: /Test Cases/i,
-    });
-    this.apiTestingLink = this.navMenu.getByRole("link", {
-      name: /API Testing/i,
-    });
-    this.videoTutorialsLink = this.navMenu.getByRole("link", {
-      name: /Video Tutorials/i,
-    });
-    this.contactUsLink = this.navMenu.getByRole("link", {
-      name: /Contact us/i,
-    });
+    this.homeLink = this.navLink("Home");
+    this.productsLink = this.navLink("Products");
+    this.cartLink = this.navLink("Cart");
+    this.loginSignupLink = this.navLink("Signup / Login");
+    this.logoutLink = this.navLink("Logout");
+    this.deleteAccountLink = this.navLink("Delete Account");
+    this.testCasesLink = this.navLink("Test Cases");
+    this.apiTestingLink = this.navLink("API Testing");
+    this.videoTutorialsLink = this.navLink("Video Tutorials");
+    this.contactUsLink = this.navLink("Contact us");
 
     // Logged in user text
     this.loggedInUserText = (username) =>

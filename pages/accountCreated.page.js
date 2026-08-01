@@ -12,11 +12,13 @@ export default class AccountCreatedPage {
     // =========================
     // ACCOUNT CREATED CONFIRMATION
     // =========================
-    this.accountCreatedHeading = this.page.locator(
-      "h2[data-qa='account-created']",
-    );
-    this.congratulationsText = this.formSection.locator("p").first();
-    this.continueButton = this.page.locator("a[data-qa='continue-button']");
+    this.accountCreatedHeading = this.formSection.getByRole("heading", {
+      name: "Account Created!",
+    });
+    this.congratulationsText = this.formSection.getByRole("paragraph").first();
+    this.continueButton = this.formSection.getByRole("link", {
+      name: "Continue",
+    });
   }
 
   // =================================================

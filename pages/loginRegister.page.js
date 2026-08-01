@@ -18,13 +18,15 @@ export default class LoginSignupPage {
     });
     this.loginForm = this.loginFormContainer.locator("form[action='/login']");
 
-    this.loginEmailInput = this.loginForm.locator(
-      "input[data-qa='login-email']",
-    );
-    this.loginPasswordInput = this.loginForm.locator(
-      "input[data-qa='login-password']",
-    );
-    this.loginButton = this.loginForm.locator("button[data-qa='login-button']");
+    this.loginEmailInput = this.loginForm.getByRole("textbox", {
+      name: "Email Address",
+    });
+    this.loginPasswordInput = this.loginForm.getByRole("textbox", {
+      name: "Password",
+    });
+    this.loginButton = this.loginForm.getByRole("button", { name: "Login" });
+
+    // Error text is a styled <p> with no role or stable text
     this.loginErrorMessage = this.loginFormContainer.locator(
       "p[style*='color: red']",
     );
@@ -32,7 +34,10 @@ export default class LoginSignupPage {
     // =========================
     // OR SEPARATOR
     // =========================
-    this.orSeparator = this.formSection.locator("h2.or");
+    this.orSeparator = this.formSection.getByRole("heading", {
+      name: "OR",
+      exact: true,
+    });
 
     // =========================
     // SIGNUP FORM
@@ -45,15 +50,16 @@ export default class LoginSignupPage {
       "form[action='/signup']",
     );
 
-    this.signupNameInput = this.signupForm.locator(
-      "input[data-qa='signup-name']",
-    );
-    this.signupEmailInput = this.signupForm.locator(
-      "input[data-qa='signup-email']",
-    );
-    this.signupButton = this.signupForm.locator(
-      "button[data-qa='signup-button']",
-    );
+    this.signupNameInput = this.signupForm.getByRole("textbox", {
+      name: "Name",
+      exact: true,
+    });
+    this.signupEmailInput = this.signupForm.getByRole("textbox", {
+      name: "Email Address",
+    });
+    this.signupButton = this.signupForm.getByRole("button", { name: "Signup" });
+
+    // Error text is a styled <p> with no role or stable text
     this.signupErrorMessage = this.signupFormContainer.locator(
       "p[style*='color: red']",
     );

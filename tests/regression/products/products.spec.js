@@ -4,7 +4,7 @@ const PRODUCT_NAME = "Stylish Dress";
 const PARTIAL_PRODUCT_NAME = "dre";
 const INVALID_PRODUCT_NAME = "xyz123";
 
-test.describe("Products Page", () => {
+test.describe("Products Page", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header }) => {
     await header.clickProducts();
   });

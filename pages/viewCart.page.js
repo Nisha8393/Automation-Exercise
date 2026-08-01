@@ -13,7 +13,7 @@ export default class ViewCartPage {
     // BREADCRUMBS
     // =========================
     this.breadcrumbs = this.cartItemsSection.locator(".breadcrumbs");
-    this.breadcrumbList = this.breadcrumbs.locator("ol.breadcrumb");
+    this.breadcrumbList = this.breadcrumbs.getByRole("list");
     this.breadcrumbHomeLink = this.breadcrumbList.getByRole("link", {
       name: "Home",
     });
@@ -22,6 +22,7 @@ export default class ViewCartPage {
     // =========================
     // CHECKOUT SECTION
     // =========================
+    // "Proceed To Checkout" is an <a> without href, so it has no link role
     this.doActionSection = this.page.locator("#do_action");
     this.proceedToCheckoutButton = this.doActionSection.locator("a.check_out");
 
@@ -30,50 +31,54 @@ export default class ViewCartPage {
     // =========================
     this.checkoutModal = this.page.locator("#checkoutModal");
     this.checkoutModalIcon = this.checkoutModal.locator(".icon-box i").first();
-    this.checkoutModalTitle = this.checkoutModal
-      .locator(".modal-title")
-      .first();
+    this.checkoutModalTitle = this.checkoutModal.getByRole("heading");
     this.checkoutModalMessage = this.checkoutModal
-      .locator(".modal-body p")
+      .getByRole("paragraph")
       .first();
     this.checkoutModalRegisterLoginLink = this.checkoutModal.getByRole("link", {
-      name: /Register \/ Login/i,
+      name: "Register / Login",
     });
-    this.checkoutModalContinueButton = this.checkoutModal.locator(
-      "button.close-checkout-modal",
-    );
+    this.checkoutModalContinueButton = this.checkoutModal.getByRole("button", {
+      name: "Continue On Cart",
+    });
 
     // =========================
     // CART TABLE
     // =========================
     this.cartInfo = this.page.locator("#cart_info");
-    this.cartTable = this.cartInfo.locator("#cart_info_table");
+    this.cartTable = this.cartInfo.getByRole("table");
     this.cartTableHead = this.cartTable.locator("thead");
     this.cartTableBody = this.cartTable.locator("tbody");
 
     // Table headers
-    this.itemHeader = this.cartTableHead.locator("td.image");
-    this.descriptionHeader = this.cartTableHead.locator("td.description");
-    this.priceHeader = this.cartTableHead.locator("td.price");
-    this.quantityHeader = this.cartTableHead.locator("td.quantity");
-    this.totalHeader = this.cartTableHead.locator("td.total");
+    this.itemHeader = this.cartTableHead.getByRole("cell", { name: "Item" });
+    this.descriptionHeader = this.cartTableHead.getByRole("cell", {
+      name: "Description",
+    });
+    this.priceHeader = this.cartTableHead.getByRole("cell", { name: "Price" });
+    this.quantityHeader = this.cartTableHead.getByRole("cell", {
+      name: "Quantity",
+    });
+    this.totalHeader = this.cartTableHead.getByRole("cell", { name: "Total" });
 
     // Cart rows
-    this.cartRows = this.cartTableBody.locator("tr");
+    this.cartRows = this.cartTableBody.getByRole("row");
 
-    // Dynamic product row by product ID
+    // Dynamic product row - rows are keyed by product id
     this.productRow = (productId) =>
       this.cartTableBody.locator(`#product-${productId}`);
 
     // Product row elements (use with productRow)
     this.productImage = (row) =>
-      row.locator("td.cart_product img.product_image");
-    this.productNameLink = (row) => row.locator("td.cart_description h4 a");
+      row.getByRole("img", { name: "Product Image" });
+    this.productNameLink = (row) => row.getByRole("heading").getByRole("link");
     this.productCategory = (row) => row.locator("td.cart_description p");
     this.productPrice = (row) => row.locator("td.cart_price p");
-    this.productQuantity = (row) => row.locator("td.cart_quantity button");
+    this.productQuantity = (row) => row.getByRole("button");
     this.productTotal = (row) =>
       row.locator("td.cart_total p.cart_total_price");
+
+    // Delete is an icon-only <a> without href, so it has no role
     this.productDeleteButton = (row) =>
       row.locator("td.cart_delete a.cart_quantity_delete");
 
@@ -82,7 +87,7 @@ export default class ViewCartPage {
     // =========================
     this.emptyCartMessage = this.cartInfo.locator("#empty_cart");
     this.emptyCartBuyProductsLink = this.emptyCartMessage.getByRole("link", {
-      name: /here/i,
+      name: "here",
     });
   }
 

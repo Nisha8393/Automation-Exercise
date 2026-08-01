@@ -2,7 +2,7 @@ import { test, expect } from "../../../fixtures/base.js";
 import { DataGenerator } from "../../../utils/helper/dataGenerator.js";
 import path from "path";
 
-test.describe("Contact Us Tests", () => {
+test.describe("Contact Us Tests", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header }) => {
     await header.clickContactUs();
   });
