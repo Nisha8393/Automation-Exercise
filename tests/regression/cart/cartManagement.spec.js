@@ -1,9 +1,13 @@
 import { test, expect } from "../../../fixtures/base.js";
+import {
+  emptyCart,
+  removeCartItem,
+} from "../../../utils/helper/cart.helper.js";
 
 const PRODUCT_A = "Blue Top";
 const PRODUCT_B = "Men Tshirt";
 
-test.describe("Cart Management", () => {
+test.describe("Cart Management", { tag: "@regression" }, () => {
   // ============================================================================
   // QUANTITY AND PRICE TESTS
   // ============================================================================
@@ -136,13 +140,8 @@ test.describe("Cart Management", () => {
 
     // Remove the product and wait for server to process
     const productIds = await viewCartPage.getAllProductIds();
-    const deleteResponse = isolatedPage.waitForResponse(
-      (resp) => resp.url().includes("delete_cart"),
-      { timeout: 15000 },
-    );
-    await viewCartPage.clickProductDeleteByProductId(productIds[0]);
-    await deleteResponse;
-    await isolatedPage.waitForLoadState("domcontentloaded");
+    await removeCartItem(isolatedPage, viewCartPage, productIds[0]);
+
     const row = viewCartPage.productRow(productIds[0]);
     await expect(row).toHaveCount(0, { timeout: 10000 });
   });
@@ -164,16 +163,7 @@ test.describe("Cart Management", () => {
     await expect(isolatedPage).toHaveURL(/view_cart/);
 
     // Remove all products one at a time, waiting for page update after each
-    const productIds = await viewCartPage.getAllProductIds();
-    for (const id of productIds) {
-      const deleteResponse = isolatedPage.waitForResponse(
-        (resp) => resp.url().includes("delete_cart"),
-        { timeout: 15000 },
-      );
-      await viewCartPage.clickProductDeleteByProductId(id);
-      await deleteResponse;
-      await isolatedPage.waitForLoadState("domcontentloaded");
-    }
+    await emptyCart(isolatedPage, viewCartPage);
 
     // Verify cart is empty
     const isEmpty = await viewCartPage.isCartEmpty();
@@ -192,13 +182,7 @@ test.describe("Cart Management", () => {
 
     await expect(isolatedPage).toHaveURL(/view_cart/);
     const productIds = await viewCartPage.getAllProductIds();
-    const deleteResponse = isolatedPage.waitForResponse(
-      (resp) => resp.url().includes("delete_cart"),
-      { timeout: 15000 },
-    );
-    await viewCartPage.clickProductDeleteByProductId(productIds[0]);
-    await deleteResponse;
-    await isolatedPage.waitForLoadState("domcontentloaded");
+    await removeCartItem(isolatedPage, viewCartPage, productIds[0]);
 
     // Verify empty cart message and "here" link
     await viewCartPage.verifyEmptyCartState();

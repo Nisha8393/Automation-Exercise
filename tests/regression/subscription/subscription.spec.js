@@ -1,7 +1,7 @@
 import { test, expect } from "../../../fixtures/base.js";
 import { DataGenerator } from "../../../utils/helper/dataGenerator.js";
 
-test.describe("Subscription Tests", () => {
+test.describe("Subscription Tests", { tag: "@regression" }, () => {
   // ============================================================================
   // SUBSCRIBE FROM DIFFERENT PAGES
   // ============================================================================
@@ -56,10 +56,9 @@ test.describe("Subscription Tests", () => {
     await expect(isolatedPage).toHaveURL(/automationexercise\.com/);
     await expect(footer.subscriptionSuccessAlert).not.toBeVisible();
 
-    const validationMsg =
-      await footer.subscriptionEmailInput.evaluate(
-        (el) => el.validationMessage,
-      );
+    const validationMsg = await footer.subscriptionEmailInput.evaluate(
+      (el) => el.validationMessage,
+    );
     expect(validationMsg).toContain(
       "Please include an '@' in the email address.",
     );
@@ -77,10 +76,9 @@ test.describe("Subscription Tests", () => {
     await expect(isolatedPage).toHaveURL(/automationexercise\.com/);
     await expect(footer.subscriptionSuccessAlert).not.toBeVisible();
 
-    const validationMsg =
-      await footer.subscriptionEmailInput.evaluate(
-        (el) => el.validationMessage,
-      );
+    const validationMsg = await footer.subscriptionEmailInput.evaluate(
+      (el) => el.validationMessage,
+    );
     expect(validationMsg).toBe("Please fill out this field.");
   });
 });

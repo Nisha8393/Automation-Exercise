@@ -13,7 +13,7 @@ export default class PaymentPage {
     // BREADCRUMBS
     // =========================
     this.breadcrumbs = this.cartItemsSection.locator(".breadcrumbs");
-    this.breadcrumbList = this.breadcrumbs.locator("ol.breadcrumb");
+    this.breadcrumbList = this.breadcrumbs.getByRole("list");
     this.breadcrumbHomeLink = this.breadcrumbList.getByRole("link", {
       name: "Home",
     });
@@ -22,9 +22,10 @@ export default class PaymentPage {
     // =========================
     // PAYMENT HEADING
     // =========================
-    this.paymentHeading = this.page
-      .locator(".step-one h2.heading")
-      .filter({ hasText: "Payment" });
+    this.paymentHeading = this.page.getByRole("heading", {
+      name: "Payment",
+      exact: true,
+    });
 
     // =========================
     // PAYMENT FORM
@@ -32,36 +33,29 @@ export default class PaymentPage {
     this.paymentInformation = this.page.locator(".payment-information");
     this.paymentForm = this.paymentInformation.locator("#payment-form");
 
-    // Name on Card
-    this.nameOnCardLabel = this.paymentForm.locator("label", {
-      hasText: "Name on Card",
-    });
+    // Labels are not tied to their inputs, so Name/Card Number have no
+    // accessible name and fall back to the site's data-qa hooks
+    this.nameOnCardLabel = this.paymentForm.getByText("Name on Card");
     this.nameOnCardInput = this.paymentForm.locator(
       "input[data-qa='name-on-card']",
     );
 
-    // Card Number
-    this.cardNumberLabel = this.paymentForm.locator("label", {
-      hasText: "Card Number",
-    });
+    this.cardNumberLabel = this.paymentForm.getByText("Card Number");
     this.cardNumberInput = this.paymentForm.locator(
       "input[data-qa='card-number']",
     );
 
-    // CVC
-    this.cvcLabel = this.paymentForm.locator("label", { hasText: "CVC" });
-    this.cvcInput = this.paymentForm.locator("input[data-qa='cvc']");
+    // CVC and Expiration are named by their placeholders
+    this.cvcLabel = this.paymentForm.getByText("CVC");
+    this.cvcInput = this.paymentForm.getByRole("textbox", { name: "ex. 311" });
 
-    // Expiration
-    this.expirationLabel = this.paymentForm.locator("label", {
-      hasText: "Expiration",
+    this.expirationLabel = this.paymentForm.getByText("Expiration");
+    this.expiryMonthInput = this.paymentForm.getByRole("textbox", {
+      name: "MM",
     });
-    this.expiryMonthInput = this.paymentForm.locator(
-      "input[data-qa='expiry-month']",
-    );
-    this.expiryYearInput = this.paymentForm.locator(
-      "input[data-qa='expiry-year']",
-    );
+    this.expiryYearInput = this.paymentForm.getByRole("textbox", {
+      name: "YYYY",
+    });
 
     // Success Message
     this.successMessageSection = this.paymentForm.locator("#success_message");
@@ -69,9 +63,9 @@ export default class PaymentPage {
       this.successMessageSection.locator(".alert-success");
 
     // Submit Button
-    this.payAndConfirmButton = this.paymentForm.locator(
-      "button[data-qa='pay-button']",
-    );
+    this.payAndConfirmButton = this.paymentForm.getByRole("button", {
+      name: "Pay and Confirm Order",
+    });
   }
 
   // =================================================

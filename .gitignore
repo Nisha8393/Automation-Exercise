@@ -1,6 +1,7 @@
 #env
 .env
 .env.*
+!.env.example
 
 # Playwright
 node_modules/
@@ -8,12 +9,10 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/playwright/.auth/
 
-# /playwright/.auth/user.json
+# Editor / OS
+.idea/
+.DS_Store
+
 /playwright/test-report/report.json
-
-
-
-
-
-

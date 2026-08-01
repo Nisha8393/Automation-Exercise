@@ -17,19 +17,21 @@ export default class SidebarPage {
     });
     this.categoryAccordion = this.leftSidebar.locator("#accordian");
 
-    // Main category link (Women / Men / Kids)
+    // Main category link (Women / Men / Kids) - word boundaries keep "Men" out of "Women"
     this.categoryLink = (categoryName) =>
-      this.categoryAccordion.locator(`a[href="#${categoryName}"]`);
+      this.categoryAccordion.getByRole("link", {
+        name: new RegExp(`\\b${categoryName}\\b`, "i"),
+      });
 
-    // Main category panel (accordion body)
+    // Main category panel (accordion body, targeted by id used for collapse)
     this.categoryPanel = (categoryName) =>
       this.categoryAccordion.locator(`#${categoryName}`);
 
     // Sub-category link inside a category
     this.subCategoryLink = (categoryName, subCategoryName) =>
-      this.categoryAccordion
-        .locator(`#${categoryName}`)
-        .locator("a", { hasText: subCategoryName });
+      this.categoryPanel(categoryName).getByRole("link", {
+        name: subCategoryName,
+      });
 
     // =========================
     // BRANDS SECTION
@@ -38,10 +40,10 @@ export default class SidebarPage {
     this.brandsHeading = this.brandsSection.getByRole("heading", {
       name: "Brands",
     });
-    this.brandsMenu = this.brandsSection.locator(".brands-name ul");
+    this.brandsMenu = this.brandsSection.getByRole("list");
 
     this.brandLink = (brandName) =>
-      this.brandsMenu.getByRole("link", { name: new RegExp(brandName, "i") });
+      this.brandsMenu.getByRole("link", { name: brandName });
   }
 
   // =================================================
