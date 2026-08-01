@@ -12,20 +12,20 @@ export default class PaymentDonePage {
     // =========================
     // ORDER CONFIRMATION
     // =========================
-    this.orderPlacedHeading = this.formSection.locator(
-      "h2[data-qa='order-placed']",
-    );
-    this.congratulationsText = this.formSection.locator("p").first();
+    this.orderPlacedHeading = this.formSection.getByRole("heading", {
+      name: "Order Placed!",
+    });
+    this.congratulationsText = this.formSection.getByRole("paragraph").first();
 
     // =========================
     // ACTION BUTTONS
     // =========================
-    this.downloadInvoiceButton = this.formSection.locator(
-      "a.check_out[href*='download_invoice']",
-    );
-    this.continueButton = this.formSection.locator(
-      "a[data-qa='continue-button']",
-    );
+    this.downloadInvoiceButton = this.formSection.getByRole("link", {
+      name: "Download Invoice",
+    });
+    this.continueButton = this.formSection.getByRole("link", {
+      name: "Continue",
+    });
   }
 
   // =================================================

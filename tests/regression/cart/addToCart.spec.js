@@ -3,7 +3,7 @@ import { test, expect } from "../../../fixtures/base.js";
 const PRODUCT_A = "Blue Top";
 const PRODUCT_B = "Men Tshirt";
 
-test.describe("Add to Cart", () => {
+test.describe("Add to Cart", { tag: "@regression" }, () => {
   // ============================================================================
   // ADD FROM DIFFERENT PAGES
   // ============================================================================

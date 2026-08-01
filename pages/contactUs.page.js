@@ -15,22 +15,36 @@ export default class ContactUsPage {
     // =========================
     // FORM INPUTS
     // =========================
-    this.nameInput = this.contactForm.locator("input[data-qa='name']");
-    this.emailInput = this.contactForm.locator("input[data-qa='email']");
-    this.subjectInput = this.contactForm.locator("input[data-qa='subject']");
-    this.messageInput = this.contactForm.locator("textarea#message");
+    this.nameInput = this.contactForm.getByRole("textbox", {
+      name: "Name",
+      exact: true,
+    });
+    this.emailInput = this.contactForm.getByRole("textbox", {
+      name: "Email",
+      exact: true,
+    });
+    this.subjectInput = this.contactForm.getByRole("textbox", {
+      name: "Subject",
+      exact: true,
+    });
+    this.messageInput = this.contactForm.getByRole("textbox", {
+      name: "Your Message Here",
+    });
+
+    // File input label is rendered by the browser, so match the field itself
     this.uploadFileInput = this.contactForm.locator(
       "input[name='upload_file']",
     );
-    this.submitButton = this.contactForm.locator(
-      "input[data-qa='submit-button']",
-    );
+
+    this.submitButton = this.contactForm.getByRole("button", {
+      name: "Submit",
+    });
 
     // =========================
     // SUCCESS STATE
     // =========================
     this.successMessage = this.contactForm.locator(".status.alert-success");
-    this.homeButton = this.contactForm.locator("a.btn-success");
+    this.homeButton = this.contactForm.getByRole("link", { name: "Home" });
   }
 
   // =================================================

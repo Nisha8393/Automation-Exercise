@@ -1,6 +1,6 @@
 import { test, expect } from "../../../fixtures/base.js";
 
-test.describe("Brand Filtering", () => {
+test.describe("Brand Filtering", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header }) => {
     await header.clickProducts();
   });

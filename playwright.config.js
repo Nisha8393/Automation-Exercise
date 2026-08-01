@@ -39,7 +39,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ["html", { open: "always" }],
+    // Never auto-open a browser on CI - it has no display and would hang
+    ["html", { open: process.env.CI ? "never" : "always" }],
+    // Annotates failures directly on the GitHub Actions run
+    ...(process.env.CI ? [["github"]] : []),
     // [
     //   "json",
     //   { outputFile: path.join(documentsDir, `playwrightReport-${today}.json`) },
@@ -56,8 +59,9 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "https://automationexercise.com",
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    // trace: "on-first-retry",
+    /* Trace on failure. See https://playwright.dev/docs/trace-viewer
+       Locally retries are 0, so "on-first-retry" would never produce one. */
+    trace: process.env.CI ? "on-first-retry" : "retain-on-failure",
     // 1 min for individual actions/waits
     timeout: 60000,
     navigationTimeout: 90000, // 1.5 minutes max for page.goto()

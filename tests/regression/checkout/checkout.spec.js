@@ -4,13 +4,15 @@ import { expectedAddress } from "../../../utils/testData/checkout.data.js";
 
 const PRODUCT_NAME = "Blue Top";
 
-test.describe("Checkout Tests", () => {
+test.describe("Checkout Tests", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header, loginPage }) => {
     // Login first
     await header.clickLoginSignup();
     const { email, password } = loginTestData.valid;
     await loginPage.login(email, password);
-    await expect(header.loggedInUserText(loginTestData.valid.name)).toBeVisible();
+    await expect(
+      header.loggedInUserText(loginTestData.valid.name),
+    ).toBeVisible();
   });
 
   // ============================================================================

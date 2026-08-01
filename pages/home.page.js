@@ -13,17 +13,20 @@ export default class HomePage {
       ".carousel-indicators li",
     );
     this.sliderItems = this.sliderCarousel.locator(".carousel-inner .item");
+
+    // Carousel arrows are icon-only links with no accessible name
     this.sliderPrevButton = this.sliderCarousel.locator(
       "a.left.control-carousel",
     );
     this.sliderNextButton = this.sliderCarousel.locator(
       "a.right.control-carousel",
     );
+
     this.sliderTestCasesButton = this.sliderCarousel.getByRole("button", {
-      name: /Test Cases/i,
+      name: "Test Cases",
     });
     this.sliderApisButton = this.sliderCarousel.getByRole("button", {
-      name: /APIs list/i,
+      name: "APIs list",
     });
 
     // =========================
@@ -45,26 +48,35 @@ export default class HomePage {
       });
 
     // ---- FIXED PRODUCT ELEMENTS (STRICT SAFE) ----
-    this.productImage = (product) => product.locator("img").first();
+    // Cards repeat their name/price in a hover overlay, hence .first()
+    this.productImage = (product) => product.getByRole("img").first();
     this.productPrice = (product) =>
-      product.locator("h2:has-text('Rs.')").first();
+      product.getByRole("heading", { name: /^Rs\./ }).first();
+
+    // Name is also read from recommended items, whose inactive carousel
+    // slides are display:none and therefore outside the accessibility tree
     this.productName = (product) => product.locator("p").first();
+
+    // "Add to cart" is an <a> without href, so it has no link role
     this.productAddToCartButton = (product) =>
       product.locator(".overlay-content a.add-to-cart");
+
     this.productViewProductLink = (product) =>
-      product.locator("a[href*='product_details']").first();
+      product.getByRole("link", { name: "View Product" }).first();
 
     // =========================
     // CART MODAL
     // =========================
     this.cartModal = this.page.locator("#cartModal");
     this.cartModalIcon = this.cartModal.locator(".icon-box i").first();
-    this.cartModalTitle = this.cartModal.locator(".modal-title").first();
-    this.cartModalMessage = this.cartModal.locator(".modal-body p").first();
+    this.cartModalTitle = this.cartModal.getByRole("heading");
+    this.cartModalMessage = this.cartModal.getByRole("paragraph").first();
     this.cartModalViewCartLink = this.cartModal.getByRole("link", {
-      name: /View Cart/i,
+      name: "View Cart",
     });
-    this.cartModalContinueButton = this.cartModal.locator("button.close-modal");
+    this.cartModalContinueButton = this.cartModal.getByRole("button", {
+      name: "Continue Shopping",
+    });
 
     // =========================
     // RECOMMENDED ITEMS SECTION

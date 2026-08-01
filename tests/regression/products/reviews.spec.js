@@ -1,7 +1,7 @@
 import { test, expect } from "../../../fixtures/base.js";
 import { DataGenerator } from "../../../utils/helper/dataGenerator.js";
 
-test.describe("Product Reviews", () => {
+test.describe("Product Reviews", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header, productsPage }) => {
     await header.clickProducts();
 

@@ -13,7 +13,7 @@ export default class CheckoutPage {
     // BREADCRUMBS
     // =========================
     this.breadcrumbs = this.cartItemsSection.locator(".breadcrumbs");
-    this.breadcrumbList = this.breadcrumbs.locator("ol.breadcrumb");
+    this.breadcrumbList = this.breadcrumbs.getByRole("list");
     this.breadcrumbHomeLink = this.breadcrumbList.getByRole("link", {
       name: "Home",
     });
@@ -22,19 +22,20 @@ export default class CheckoutPage {
     // =========================
     // ADDRESS DETAILS SECTION
     // =========================
-    this.addressDetailsHeading = this.page
-      .locator(".step-one h2.heading")
-      .filter({ hasText: "Address Details" });
+    this.addressDetailsHeading = this.page.getByRole("heading", {
+      name: "Address Details",
+    });
 
     this.checkoutInformation = this.page.locator(
       ".checkout-information[data-qa='checkout-info']",
     );
 
-    // Delivery Address
+    // Delivery Address - list items carry no accessible name, so match by class
     this.deliveryAddress =
       this.checkoutInformation.locator("#address_delivery");
-    this.deliveryAddressTitle =
-      this.deliveryAddress.locator("h3.page-subheading");
+    this.deliveryAddressTitle = this.deliveryAddress.getByRole("heading", {
+      name: "Your delivery address",
+    });
     this.deliveryAddressName = this.deliveryAddress
       .locator("li.address_firstname.address_lastname")
       .first();
@@ -52,8 +53,9 @@ export default class CheckoutPage {
 
     // Billing Address
     this.billingAddress = this.checkoutInformation.locator("#address_invoice");
-    this.billingAddressTitle =
-      this.billingAddress.locator("h3.page-subheading");
+    this.billingAddressTitle = this.billingAddress.getByRole("heading", {
+      name: "Your billing address",
+    });
     this.billingAddressName = this.billingAddress
       .locator("li.address_firstname.address_lastname")
       .first();
@@ -71,46 +73,53 @@ export default class CheckoutPage {
     // =========================
     // REVIEW ORDER SECTION
     // =========================
-    this.reviewOrderHeading = this.page
-      .locator(".step-one h2.heading")
-      .filter({ hasText: "Review Your Order" });
+    this.reviewOrderHeading = this.page.getByRole("heading", {
+      name: "Review Your Order",
+    });
 
     // =========================
     // CART TABLE
     // =========================
     this.cartInfo = this.page.locator("#cart_info");
-    this.cartTable = this.cartInfo.locator("table");
+    this.cartTable = this.cartInfo.getByRole("table");
     this.cartTableHead = this.cartTable.locator("thead");
     this.cartTableBody = this.cartTable.locator("tbody");
 
     // Table headers
-    this.itemHeader = this.cartTableHead.locator("td.image");
-    this.descriptionHeader = this.cartTableHead.locator("td.description");
-    this.priceHeader = this.cartTableHead.locator("td.price");
-    this.quantityHeader = this.cartTableHead.locator("td.quantity");
-    this.totalHeader = this.cartTableHead.locator("td.total");
+    this.itemHeader = this.cartTableHead.getByRole("cell", { name: "Item" });
+    this.descriptionHeader = this.cartTableHead.getByRole("cell", {
+      name: "Description",
+    });
+    this.priceHeader = this.cartTableHead.getByRole("cell", { name: "Price" });
+    this.quantityHeader = this.cartTableHead.getByRole("cell", {
+      name: "Quantity",
+    });
+    this.totalHeader = this.cartTableHead.getByRole("cell", { name: "Total" });
 
-    // Cart rows (excluding total row)
+    // Cart rows - id prefix keeps the "Total Amount" row out
     this.cartRows = this.cartTableBody.locator("tr[id^='product-']");
 
-    // Dynamic product row by product ID
+    // Dynamic product row - rows are keyed by product id
     this.productRow = (productId) =>
       this.cartTableBody.locator(`#product-${productId}`);
 
     // Product row elements (use with productRow)
-    this.productImage = (row) => row.locator("td.cart_product img");
-    this.productNameLink = (row) => row.locator("td.cart_description h4 a");
+    this.productImage = (row) =>
+      row.getByRole("img", { name: "Product Image" });
+    this.productNameLink = (row) => row.getByRole("heading").getByRole("link");
     this.productCategory = (row) => row.locator("td.cart_description p");
     this.productPrice = (row) => row.locator("td.cart_price p");
-    this.productQuantity = (row) => row.locator("td.cart_quantity button");
+    this.productQuantity = (row) => row.getByRole("button");
     this.productTotal = (row) =>
       row.locator("td.cart_total p.cart_total_price");
 
     // Total Amount Row
     this.totalAmountRow = this.cartTableBody
-      .locator("tr")
-      .filter({ has: this.page.locator("h4 b", { hasText: "Total Amount" }) });
-    this.totalAmountLabel = this.totalAmountRow.locator("h4 b");
+      .getByRole("row")
+      .filter({ hasText: "Total Amount" });
+    this.totalAmountLabel = this.totalAmountRow.getByRole("heading", {
+      name: "Total Amount",
+    });
     this.totalAmountPrice = this.totalAmountRow.locator("p.cart_total_price");
 
     // =========================
@@ -118,12 +127,14 @@ export default class CheckoutPage {
     // =========================
     this.orderMessageSection = this.page.locator("#ordermsg");
     this.orderMessageLabel = this.orderMessageSection.locator("label");
-    this.orderMessageTextArea = this.orderMessageSection.locator("textarea");
+    this.orderMessageTextArea = this.orderMessageSection.getByRole("textbox");
 
     // =========================
     // PLACE ORDER
     // =========================
-    this.placeOrderButton = this.page.locator("a.check_out");
+    this.placeOrderButton = this.page.getByRole("link", {
+      name: "Place Order",
+    });
   }
 
   // =================================================

@@ -10,7 +10,7 @@ const FIRST_PRODUCT = {
   brand: "Polo",
 };
 
-test.describe("Product Details Page", () => {
+test.describe("Product Details Page", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header, productsPage }) => {
     await header.clickProducts();
 
