@@ -81,7 +81,7 @@ class ExcelReporter {
     );
   }
 
-  onBegin(config, suite) {
+  onBegin(config, _suite) {
     this.startTime = new Date();
     this.projectName = this.options.projectName || "Automation Exercise";
     this.testUrl = config.projects?.[0]?.use?.baseURL || "";

@@ -16,3 +16,4 @@ node_modules/
 .DS_Store
 
 /playwright/test-report/report.json
+/all-blob-reports/

@@ -1,0 +1,16 @@
+# Generated / non-source
+node_modules/
+playwright-report/
+test-results/
+blob-report/
+playwright/.auth/
+
+# Data & assets we don't want reflowed
+package-lock.json
+pnpm-lock.yaml
+test-scenarios/
+utils/images/
+screenshots/
+
+# Markdown - Prettier reflows code blocks and affects rendered output
+*.md

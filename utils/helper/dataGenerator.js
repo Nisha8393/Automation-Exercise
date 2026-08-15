@@ -68,7 +68,8 @@ export class DataGenerator {
    */
   static generateDateOfBirth(minAge = 18, maxAge = 60) {
     const currentYear = new Date().getFullYear();
-    const year = currentYear - Math.floor(Math.random() * (maxAge - minAge + 1)) - minAge;
+    const year =
+      currentYear - Math.floor(Math.random() * (maxAge - minAge + 1)) - minAge;
     const month = Math.floor(Math.random() * 12) + 1;
     const day = Math.floor(Math.random() * 28) + 1;
 
@@ -85,10 +86,24 @@ export class DataGenerator {
    */
   static generateUserData() {
     const firstName = this.getRandomItem([
-      "John", "Jane", "Michael", "Sarah", "David", "Emma", "Robert", "Lisa"
+      "John",
+      "Jane",
+      "Michael",
+      "Sarah",
+      "David",
+      "Emma",
+      "Robert",
+      "Lisa",
     ]);
     const lastName = this.getRandomItem([
-      "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis"
+      "Smith",
+      "Johnson",
+      "Williams",
+      "Brown",
+      "Jones",
+      "Garcia",
+      "Miller",
+      "Davis",
     ]);
     const dob = this.generateDateOfBirth();
 
@@ -102,12 +117,39 @@ export class DataGenerator {
       dateOfBirth: dob,
       newsletter: Math.random() > 0.5,
       specialOffers: Math.random() > 0.5,
-      company: this.getRandomItem(["TechCorp", "DataSoft", "CloudNet", "WebDev Inc", ""]),
+      company: this.getRandomItem([
+        "TechCorp",
+        "DataSoft",
+        "CloudNet",
+        "WebDev Inc",
+        "",
+      ]),
       address: `${Math.floor(Math.random() * 9999) + 1} ${this.getRandomItem(["Main St", "Oak Ave", "Elm Rd", "Park Blvd"])}`,
-      address2: Math.random() > 0.5 ? `Apt ${Math.floor(Math.random() * 100) + 1}` : "",
-      country: this.getRandomItem(["India", "United States", "Canada", "Australia", "Israel", "New Zealand", "Singapore"]),
-      state: this.getRandomItem(["California", "New York", "Texas", "Florida", "Maharashtra"]),
-      city: this.getRandomItem(["Los Angeles", "New York", "Houston", "Miami", "Mumbai"]),
+      address2:
+        Math.random() > 0.5 ? `Apt ${Math.floor(Math.random() * 100) + 1}` : "",
+      country: this.getRandomItem([
+        "India",
+        "United States",
+        "Canada",
+        "Australia",
+        "Israel",
+        "New Zealand",
+        "Singapore",
+      ]),
+      state: this.getRandomItem([
+        "California",
+        "New York",
+        "Texas",
+        "Florida",
+        "Maharashtra",
+      ]),
+      city: this.getRandomItem([
+        "Los Angeles",
+        "New York",
+        "Houston",
+        "Miami",
+        "Mumbai",
+      ]),
       zipcode: (Math.floor(Math.random() * 90000) + 10000).toString(),
       mobileNumber: this.generatePhone(),
     };
