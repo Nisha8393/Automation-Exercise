@@ -117,13 +117,7 @@ test.describe("Products Page", { tag: "@regression" }, () => {
       productsPage,
       isolatedPage,
     }) => {
-      const firstProduct = productsPage.productCards.first();
-      await firstProduct.scrollIntoViewIfNeeded();
-      await firstProduct.hover();
-
-      const viewLink = productsPage.productViewProductLink(firstProduct);
-      await expect(viewLink).toBeVisible();
-      await viewLink.click();
+      await productsPage.viewFirstProduct();
 
       await expect(isolatedPage).toHaveURL(/product_details/);
     });
@@ -152,7 +146,7 @@ test.describe("Products Page", { tag: "@regression" }, () => {
       await productsPage.verifyCartModalShown();
       await productsPage.clickCartModalContinue();
 
-      await expect(productsPage.cartModal).not.toBeVisible();
+      await expect(productsPage.cartModal).toBeHidden();
     });
 
     test("should navigate to cart after adding product", async ({

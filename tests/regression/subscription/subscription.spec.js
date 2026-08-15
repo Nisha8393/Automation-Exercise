@@ -54,7 +54,7 @@ test.describe("Subscription Tests", { tag: "@regression" }, () => {
 
     // Should stay on same page - browser validation prevents submit
     await expect(isolatedPage).toHaveURL(/automationexercise\.com/);
-    await expect(footer.subscriptionSuccessAlert).not.toBeVisible();
+    await expect(footer.subscriptionSuccessAlert).toBeHidden();
 
     const validationMsg = await footer.subscriptionEmailInput.evaluate(
       (el) => el.validationMessage,
@@ -74,7 +74,7 @@ test.describe("Subscription Tests", { tag: "@regression" }, () => {
 
     // Should stay on same page - browser validation prevents submit
     await expect(isolatedPage).toHaveURL(/automationexercise\.com/);
-    await expect(footer.subscriptionSuccessAlert).not.toBeVisible();
+    await expect(footer.subscriptionSuccessAlert).toBeHidden();
 
     const validationMsg = await footer.subscriptionEmailInput.evaluate(
       (el) => el.validationMessage,

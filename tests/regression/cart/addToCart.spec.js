@@ -16,13 +16,7 @@ test.describe("Add to Cart", { tag: "@regression" }, () => {
     isolatedPage,
   }) => {
     await header.clickProducts();
-
-    // Navigate to first product detail
-    const firstProduct = productsPage.productCards.first();
-    await firstProduct.scrollIntoViewIfNeeded();
-    await firstProduct.hover();
-    const viewLink = productsPage.productViewProductLink(firstProduct);
-    await viewLink.click();
+    await productsPage.viewFirstProduct();
 
     // Get the product name before adding
     const expectedName = await productDetailsPage.getProductName();

@@ -12,6 +12,16 @@ test.describe("Registration Tests", { tag: "@regression" }, () => {
   // ============================================================================
 
   test.describe("Valid Registration", () => {
+    // Set as soon as an account really exists, so teardown deletes it even when
+    // a later assertion fails - and stays inert for tests that create nothing
+    let accountCreated = false;
+
+    test.afterEach(async ({ header }) => {
+      if (!accountCreated) return;
+      accountCreated = false;
+      await header.clickDeleteAccount();
+    });
+
     test("should proceed to registration form with valid data", async ({
       loginPage,
       isolatedPage,
@@ -72,13 +82,11 @@ test.describe("Registration Tests", { tag: "@regression" }, () => {
       // Step 4: Verify account created
       const isCreated = await accountCreatedPage.isAccountCreated();
       expect(isCreated).toBe(true);
+      accountCreated = true;
 
       // Step 5: Continue and verify logged in
       await accountCreatedPage.clickContinue();
       await expect(header.loggedInUserText(newUser.name)).toBeVisible();
-
-      // Cleanup: delete account
-      await header.clickDeleteAccount();
     });
   });
 

@@ -1,9 +1,6 @@
 import { test, expect } from "../../fixtures/base.js";
 import { loginTestData } from "../../utils/testData/auth.data.js";
-import {
-  paymentTestData,
-  expectedAddress,
-} from "../../utils/testData/checkout.data.js";
+import { paymentTestData } from "../../utils/testData/checkout.data.js";
 import { emptyCart } from "../../utils/helper/cart.helper.js";
 
 const PRODUCT_NAME = "Blue Top";
@@ -74,13 +71,14 @@ test.describe("E2E - Purchase Flow", { tag: "@e2e" }, () => {
       );
     });
 
-    await test.step("Proceed to checkout and confirm the saved addresses", async () => {
+    await test.step("Proceed to checkout and confirm the address details render", async () => {
       await viewCartPage.clickProceedToCheckout();
 
       await expect(isolatedPage).toHaveURL(/checkout/);
       await expect(checkoutPage.addressDetailsHeading).toBeVisible();
-      await checkoutPage.verifyDeliveryAddress(expectedAddress);
-      await checkoutPage.verifyBillingAddress(expectedAddress);
+      // Exact values are asserted in the checkout regression tests, against an
+      // account they register themselves
+      await checkoutPage.verifyAddressFieldsVisible();
     });
 
     await test.step("Review the order and leave a comment", async () => {

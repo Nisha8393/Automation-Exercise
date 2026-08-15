@@ -1,28 +1,17 @@
 // @ts-check
 import { defineConfig, devices } from "@playwright/test";
-import path from "path";
-import os from "os";
-//import ExcelReporter from "./scripts/generateExcelReport.js";
 
-const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
-const documentsDir = path.join(
-  os.homedir(),
-  "Documents",
-  "PlaywrightTestReport",
-);
+// .env is loaded where it is used, in utils/testData/auth.data.js
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-//
-// // Dynamically load the appropriate .env file based on the environment
-// const environment = process.env.NODE_ENV || 'dev'; // default to 'dev' if NODE_ENV is not set
-// dotenv.config({path: path.resolve(__dirname, `.env.${environment}`)});
-//
-// console.log(`Loaded environment: ${environment}`);
+/** @type {import('@playwright/test').ReporterDescription[]} */
+const reporters = [
+  // Never auto-open a browser on CI - it has no display and would hang
+  ["html", { open: process.env.CI ? "never" : "always" }],
+  ["./scripts/generateExcelReport.js", {}],
+];
+
+// Annotates failures directly on the GitHub Actions run
+if (process.env.CI) reporters.push(["github", {}]);
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -30,7 +19,9 @@ const documentsDir = path.join(
 export default defineConfig({
   testDir: "./tests",
   // globalSetup removed - worker-scoped fixture in fixtures/base.js handles navigation
-  /* Run tests in files in parallel */
+  /* Sequential on purpose: the live site throttles concurrent browsers and
+     serves a bot check to datacenter IPs, and the order-review and e2e tests
+     share one account whose cart lives server-side. */
   fullyParallel: false,
   workers: 1,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -38,18 +29,8 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    // Never auto-open a browser on CI - it has no display and would hang
-    ["html", { open: process.env.CI ? "never" : "always" }],
-    // Annotates failures directly on the GitHub Actions run
-    ...(process.env.CI ? [["github"]] : []),
-    // [
-    //   "json",
-    //   { outputFile: path.join(documentsDir, `playwrightReport-${today}.json`) },
-    // ],
-    ["./scripts/generateExcelReport.js"],
-  ],
-  // 2 minutes for the whole test + hooks
+  reporter: reporters,
+  // 10 minutes for the whole test + hooks
   timeout: 600000,
   expect: {
     timeout: 15000, // 15 seconds for all expect() calls
@@ -62,10 +43,8 @@ export default defineConfig({
     /* Trace on failure. See https://playwright.dev/docs/trace-viewer
        Locally retries are 0, so "on-first-retry" would never produce one. */
     trace: process.env.CI ? "on-first-retry" : "retain-on-failure",
-    // 1 min for individual actions/waits
-    timeout: 60000,
+    actionTimeout: 15000, // 15 seconds for individual actions/waits
     navigationTimeout: 90000, // 1.5 minutes max for page.goto()
-    ...devices["Desktop Chrome"],
     screenshot: "only-on-failure",
     headless: true, // Run headless by default, use --headed flag for headed mode
     locale: "en-US",
@@ -76,17 +55,22 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Logs in once per run and saves the session to playwright/.auth/user.json.
+    // Specs that need an account opt in with test.use({ storageState }) rather
+    // than repeating the login through the UI.
+    {
+      name: "setup",
+      testMatch: /.*\.setup\.js/,
+    },
     {
       name: "chromium",
+      dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
-        // storageState removed - handled by sharedContext fixture in fixtures/base.js
-        screenshot: "only-on-failure",
         viewport: {
           width: 1280,
           height: 720,
         },
-        actionTimeout: 15000,
         launchOptions: {
           args: [
             "--disable-blink-features=AutomationControlled",
@@ -95,6 +79,20 @@ export default defineConfig({
           ],
         },
       },
+    },
+
+    // Cross-browser coverage is deliberately limited to @smoke: those tests are
+    // read-only, so they touch no account state, and running the full suite on
+    // three browsers would triple the load on a live third-party site.
+    {
+      name: "firefox",
+      grep: /@smoke/,
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      grep: /@smoke/,
+      use: { ...devices["Desktop Safari"] },
     },
 
     /* Test against mobile viewports. */

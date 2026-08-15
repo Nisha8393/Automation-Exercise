@@ -106,7 +106,14 @@ export default class ProductsPage {
     const addToCartBtn = this.productAddToCartButton(product);
 
     await expect(addToCartBtn).toBeVisible();
+
+    // Adding is an ajax call and the modal only opens once it returns, so wait
+    // on the response instead of racing the modal
+    const added = this.page.waitForResponse((resp) =>
+      resp.url().includes("add_to_cart"),
+    );
     await addToCartBtn.click();
+    await added;
   }
 
   async viewProduct(productName) {
@@ -115,6 +122,22 @@ export default class ProductsPage {
     const product = this.productCard(productName);
     const viewLink = this.productViewProductLink(product);
 
+    await expect(viewLink).toBeVisible();
+    await viewLink.click();
+  }
+
+  // For tests that need any product detail page rather than a specific one -
+  // avoids hard-coding a product name that the live site could drop
+  async viewFirstProduct() {
+    await this.featuresItemsSection.scrollIntoViewIfNeeded();
+
+    const product = this.productCards.first();
+    await expect(product).toBeVisible();
+
+    await product.scrollIntoViewIfNeeded();
+    await product.hover();
+
+    const viewLink = this.productViewProductLink(product);
     await expect(viewLink).toBeVisible();
     await viewLink.click();
   }

@@ -124,7 +124,14 @@ export default class HomePage {
     const addToCartBtn = this.productAddToCartButton(product);
 
     await expect(addToCartBtn).toBeVisible();
+
+    // Adding is an ajax call and the modal only opens once it returns, so wait
+    // on the response instead of racing the modal
+    const added = this.page.waitForResponse((resp) =>
+      resp.url().includes("add_to_cart"),
+    );
     await addToCartBtn.click();
+    await added;
   }
 
   async viewProduct(productName) {

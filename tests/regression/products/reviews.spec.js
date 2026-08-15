@@ -4,14 +4,7 @@ import { DataGenerator } from "../../../utils/helper/dataGenerator.js";
 test.describe("Product Reviews", { tag: "@regression" }, () => {
   test.beforeEach(async ({ header, productsPage }) => {
     await header.clickProducts();
-
-    // Navigate to first product detail page
-    const firstProduct = productsPage.productCards.first();
-    await firstProduct.scrollIntoViewIfNeeded();
-    await firstProduct.hover();
-    const viewLink = productsPage.productViewProductLink(firstProduct);
-    await expect(viewLink).toBeVisible();
-    await viewLink.click();
+    await productsPage.viewFirstProduct();
   });
 
   // ============================================================================

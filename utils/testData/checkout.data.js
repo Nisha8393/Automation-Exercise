@@ -1,11 +1,12 @@
 /**
  * Checkout & Payment Test Data
- * Data for checkout address verification and payment tests
+ * Data for payment tests. The expected checkout address is derived from the
+ * account each test registers - see utils/helper/registration.helper.js.
  */
 
 export const paymentTestData = {
   valid: {
-    nameOnCard: "***REMOVED***",
+    nameOnCard: "Test User",
     cardNumber: "4100000000000",
     cvc: "123",
     expiryMonth: "01",
@@ -13,16 +14,6 @@ export const paymentTestData = {
   },
 };
 
-export const expectedAddress = {
-  name: "***REMOVED***",
-  address1: "***REMOVED***",
-  address2: "***REMOVED***",
-  cityStateZip: "***REMOVED***",
-  country: "Canada",
-  phone: "***REMOVED***",
-};
-
 export default {
   paymentTestData,
-  expectedAddress,
 };

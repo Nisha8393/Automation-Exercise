@@ -20,20 +20,14 @@ test.describe("Cart Management", { tag: "@regression" }, () => {
     isolatedPage,
   }) => {
     await header.clickProducts();
-
-    // Navigate to first product detail
-    const firstProduct = productsPage.productCards.first();
-    await firstProduct.scrollIntoViewIfNeeded();
-    await firstProduct.hover();
-    const viewLink = productsPage.productViewProductLink(firstProduct);
-    await viewLink.click();
+    await productsPage.viewFirstProduct();
 
     // Get the product name before adding
     const expectedName = await productDetailsPage.getProductName();
 
     // Set quantity to 4 and add
     await productDetailsPage.addToCartWithQuantity(4);
-    await expect(productDetailsPage.cartModal).toBeVisible({ timeout: 30000 });
+    await expect(productDetailsPage.cartModal).toBeVisible();
     await productDetailsPage.clickCartModalViewCart();
 
     // Verify correct product with correct quantity in cart
@@ -52,13 +46,7 @@ test.describe("Cart Management", { tag: "@regression" }, () => {
     isolatedPage,
   }) => {
     await header.clickProducts();
-
-    // Navigate to first product detail
-    const firstProduct = productsPage.productCards.first();
-    await firstProduct.scrollIntoViewIfNeeded();
-    await firstProduct.hover();
-    const viewLink = productsPage.productViewProductLink(firstProduct);
-    await viewLink.click();
+    await productsPage.viewFirstProduct();
 
     // Get the price before adding
     const priceText = await productDetailsPage.getProductPrice();

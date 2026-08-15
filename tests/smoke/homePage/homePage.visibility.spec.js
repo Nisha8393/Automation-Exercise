@@ -1,305 +1,171 @@
 import { test, expect } from "../../../fixtures/base.js";
 
+// One test per page region rather than one per element. expect.soft keeps every
+// assertion in a region running, so a failure reports all the missing elements
+// at once instead of stopping at the first.
 test.describe.serial("HomePage - Visibility Tests", { tag: "@smoke" }, () => {
   // ======================================================
   // HEADER SECTION
   // ======================================================
-  test.describe("Header Section", () => {
-    test("should display header", async ({ headerSection }) => {
-      await expect(headerSection.header).toBeVisible();
-    });
+  test("Header shows the logo and full navigation", async ({
+    headerSection,
+  }) => {
+    await expect.soft(headerSection.header).toBeVisible();
+    await expect.soft(headerSection.logoContainer).toBeVisible();
+    await expect.soft(headerSection.logoImage).toBeVisible();
+    await expect.soft(headerSection.navMenu).toBeVisible();
 
-    test("should display logo container", async ({ headerSection }) => {
-      await expect(headerSection.logoContainer).toBeVisible();
-    });
+    const navLinks = {
+      Home: headerSection.homeLink,
+      Products: headerSection.productsLink,
+      Cart: headerSection.cartLink,
+      "Signup / Login": headerSection.loginSignupLink,
+      "Test Cases": headerSection.testCasesLink,
+      "API Testing": headerSection.apiTestingLink,
+      "Video Tutorials": headerSection.videoTutorialsLink,
+      "Contact us": headerSection.contactUsLink,
+    };
 
-    test("should display logo image", async ({ headerSection }) => {
-      await expect(headerSection.logoImage).toBeVisible();
-    });
-
-    test("should display navigation menu", async ({ headerSection }) => {
-      await expect(headerSection.navMenu).toBeVisible();
-    });
-
-    test("should display Home link", async ({ headerSection }) => {
-      await expect(headerSection.homeLink).toBeVisible();
-    });
-
-    test("should display Products link", async ({ headerSection }) => {
-      await expect(headerSection.productsLink).toBeVisible();
-    });
-
-    test("should display Cart link", async ({ headerSection }) => {
-      await expect(headerSection.cartLink).toBeVisible();
-    });
-
-    test("should display Signup / Login link", async ({ headerSection }) => {
-      await expect(headerSection.loginSignupLink).toBeVisible();
-    });
-
-    test("should display Test Cases link", async ({ headerSection }) => {
-      await expect(headerSection.testCasesLink).toBeVisible();
-    });
-
-    test("should display API Testing link", async ({ headerSection }) => {
-      await expect(headerSection.apiTestingLink).toBeVisible();
-    });
-
-    test("should display Video Tutorials link", async ({ headerSection }) => {
-      await expect(headerSection.videoTutorialsLink).toBeVisible();
-    });
-
-    test("should display Contact Us link", async ({ headerSection }) => {
-      await expect(headerSection.contactUsLink).toBeVisible();
-    });
+    for (const [name, link] of Object.entries(navLinks)) {
+      await expect.soft(link, `nav link "${name}"`).toBeVisible();
+    }
   });
 
   // ======================================================
   // SLIDER SECTION
   // ======================================================
-  test.describe("Slider Section", () => {
-    test("should display slider", async ({ homePage }) => {
-      await expect(homePage.sliderSection).toBeVisible();
-      await expect(homePage.sliderCarousel).toBeVisible();
-      await expect(homePage.sliderPrevButton).toBeVisible();
-      await expect(homePage.sliderNextButton).toBeVisible();
+  test("Slider shows carousel controls and call-to-action buttons", async ({
+    homePage,
+  }) => {
+    await expect.soft(homePage.sliderSection).toBeVisible();
+    await expect.soft(homePage.sliderCarousel).toBeVisible();
+    await expect.soft(homePage.sliderPrevButton).toBeVisible();
+    await expect.soft(homePage.sliderNextButton).toBeVisible();
+    await expect.soft(homePage.sliderTestCasesButton).toBeVisible();
+    await expect.soft(homePage.sliderApisButton).toBeVisible();
 
-      const itemCount = await homePage.sliderItems.count();
-      expect(itemCount).toBeGreaterThan(0);
-    });
-
-    test("should display Test Cases button", async ({ homePage }) => {
-      await expect(homePage.sliderTestCasesButton).toBeVisible();
-    });
-
-    test("should display APIs button", async ({ homePage }) => {
-      await expect(homePage.sliderApisButton).toBeVisible();
-    });
+    expect.soft(await homePage.sliderItems.count()).toBeGreaterThan(0);
   });
 
   // ======================================================
   // LEFT SIDEBAR - CATEGORIES
   // ======================================================
-  test.describe("Left Sidebar - Categories", () => {
-    test("should display left sidebar", async ({ sidebarSection }) => {
-      await expect(sidebarSection.leftSidebar).toBeVisible();
-    });
+  test("Sidebar shows the category accordion and its top-level categories", async ({
+    sidebarSection,
+  }) => {
+    await expect.soft(sidebarSection.leftSidebar).toBeVisible();
+    await expect.soft(sidebarSection.categoryHeading).toBeVisible();
+    await expect.soft(sidebarSection.categoryHeading).toHaveText("Category");
+    await expect.soft(sidebarSection.categoryAccordion).toBeVisible();
 
-    test("should display Category heading", async ({ sidebarSection }) => {
-      await expect(sidebarSection.categoryHeading).toBeVisible();
-      await expect(sidebarSection.categoryHeading).toHaveText("Category");
-    });
-
-    test("should display category accordion", async ({ sidebarSection }) => {
-      await expect(sidebarSection.categoryAccordion).toBeVisible();
-    });
-
-    test("should display Women category link", async ({ sidebarSection }) => {
-      const womenCategory = sidebarSection.categoryLink("Women");
-      await expect(womenCategory).toBeVisible();
-    });
-
-    test("should display Men category link", async ({ sidebarSection }) => {
-      const menCategory = sidebarSection.categoryLink("Men");
-      await expect(menCategory).toBeVisible();
-    });
-
-    test("should display Kids category link", async ({ sidebarSection }) => {
-      const kidsCategory = sidebarSection.categoryLink("Kids");
-      await expect(kidsCategory).toBeVisible();
-    });
+    for (const category of ["Women", "Men", "Kids"]) {
+      await expect
+        .soft(sidebarSection.categoryLink(category), `category "${category}"`)
+        .toBeVisible();
+    }
   });
 
   // ======================================================
   // LEFT SIDEBAR - BRANDS
   // ======================================================
-  test.describe("Left Sidebar - Brands", () => {
-    test("should display brands section", async ({ sidebarSection }) => {
-      await expect(sidebarSection.brandsSection).toBeVisible();
-    });
+  test("Sidebar shows the brands menu and its brand links", async ({
+    sidebarSection,
+  }) => {
+    await expect.soft(sidebarSection.brandsSection).toBeVisible();
+    await expect.soft(sidebarSection.brandsHeading).toBeVisible();
+    await expect.soft(sidebarSection.brandsHeading).toHaveText("Brands");
+    await expect.soft(sidebarSection.brandsMenu).toBeVisible();
 
-    test("should display Brands heading", async ({ sidebarSection }) => {
-      await expect(sidebarSection.brandsHeading).toBeVisible();
-      await expect(sidebarSection.brandsHeading).toHaveText("Brands");
-    });
-
-    test("should display brands menu", async ({ sidebarSection }) => {
-      await expect(sidebarSection.brandsMenu).toBeVisible();
-    });
-
-    test("should display Polo brand link", async ({ sidebarSection }) => {
-      const poloBrand = sidebarSection.brandLink("Polo");
-      await expect(poloBrand).toBeVisible();
-    });
-
-    test("should display H&M brand link", async ({ sidebarSection }) => {
-      const hmBrand = sidebarSection.brandLink("H&M");
-      await expect(hmBrand).toBeVisible();
-    });
-
-    test("should display Madame brand link", async ({ sidebarSection }) => {
-      const madameBrand = sidebarSection.brandLink("Madame");
-      await expect(madameBrand).toBeVisible();
-    });
+    for (const brand of ["Polo", "H&M", "Madame"]) {
+      await expect
+        .soft(sidebarSection.brandLink(brand), `brand "${brand}"`)
+        .toBeVisible();
+    }
   });
 
   // ======================================================
   // FEATURED ITEMS SECTION
   // ======================================================
-  test.describe("Features Items Section", () => {
-    test("should display features items section", async ({ homePage }) => {
-      await expect(homePage.featuresItemsSection).toBeVisible();
-    });
+  test("Features Items shows product cards with image, name, price and hover actions", async ({
+    homePage,
+  }) => {
+    await expect.soft(homePage.featuresItemsSection).toBeVisible();
+    await expect.soft(homePage.featuresItemsHeading).toBeVisible();
+    await expect
+      .soft(homePage.featuresItemsHeading)
+      .toHaveText("Features Items");
 
-    test("should display Features Items heading", async ({ homePage }) => {
-      await expect(homePage.featuresItemsHeading).toBeVisible();
-      await expect(homePage.featuresItemsHeading).toHaveText("Features Items");
-    });
+    expect.soft(await homePage.productCards.count()).toBeGreaterThan(0);
 
-    test("should display multiple product cards", async ({ homePage }) => {
-      const count = await homePage.productCards.count();
-      expect(count).toBeGreaterThan(0);
-    });
+    const firstProduct = homePage.productCards.first();
+    await expect.soft(homePage.productImage(firstProduct)).toBeVisible();
+    await expect.soft(homePage.productName(firstProduct)).toBeVisible();
+    await expect.soft(homePage.productPrice(firstProduct)).toBeVisible();
 
-    test("should display product images", async ({ homePage }) => {
-      const firstProduct = homePage.productCards.first();
-      const productImage = homePage.productImage(firstProduct);
-      await expect(productImage).toBeVisible();
-    });
-
-    test("should display product prices", async ({ homePage }) => {
-      const firstProduct = homePage.productCards.first();
-      const productPrice = homePage.productPrice(firstProduct);
-      await expect(productPrice).toBeVisible();
-    });
-
-    test("should display product names", async ({ homePage }) => {
-      const firstProduct = homePage.productCards.first();
-      const productName = homePage.productName(firstProduct);
-      await expect(productName).toBeVisible();
-    });
-
-    test("should display add to cart buttons", async ({ homePage }) => {
-      const firstProduct = homePage.productCards.first();
-      await firstProduct.hover();
-      const addToCartBtn = homePage.productAddToCartButton(firstProduct);
-      await expect(addToCartBtn).toBeVisible();
-    });
-
-    test("should display view product links", async ({ homePage }) => {
-      const firstProduct = homePage.productCards.first();
-      await firstProduct.hover();
-      const viewProductLink = homePage.productViewProductLink(firstProduct);
-      await expect(viewProductLink).toBeVisible();
-    });
+    // Add to cart and View Product only render in the hover overlay
+    await firstProduct.hover();
+    await expect
+      .soft(homePage.productAddToCartButton(firstProduct))
+      .toBeVisible();
+    await expect
+      .soft(homePage.productViewProductLink(firstProduct))
+      .toBeVisible();
   });
 
   // ======================================================
   // CART MODAL
   // ======================================================
-  test.describe("Cart Modal", () => {
-    test("should display cart modal and its elements after adding a product", async ({
-      homePage,
-    }) => {
-      // Add first product to cart
-      const firstProduct = homePage.productCards.first();
-      await firstProduct.scrollIntoViewIfNeeded();
-      await firstProduct.hover();
-      const addToCartBtn = homePage.productAddToCartButton(firstProduct);
-      await addToCartBtn.click();
+  test("Cart modal shows all of its elements after adding a product", async ({
+    homePage,
+  }) => {
+    const firstProduct = homePage.productCards.first();
+    await firstProduct.scrollIntoViewIfNeeded();
+    await firstProduct.hover();
+    await homePage.productAddToCartButton(firstProduct).click();
 
-      // Check cart modal visibility
-      await expect(homePage.cartModal).toBeVisible();
+    await expect(homePage.cartModal).toBeVisible();
 
-      // Check all modal elements
-      await expect(homePage.cartModalIcon).toBeVisible();
-      await expect(homePage.cartModalTitle).toBeVisible();
-      await expect(homePage.cartModalMessage).toBeVisible();
-      await expect(homePage.cartModalViewCartLink).toBeVisible();
-      await expect(homePage.cartModalContinueButton).toBeVisible();
+    await expect.soft(homePage.cartModalIcon).toBeVisible();
+    await expect.soft(homePage.cartModalTitle).toBeVisible();
+    await expect.soft(homePage.cartModalMessage).toBeVisible();
+    await expect.soft(homePage.cartModalViewCartLink).toBeVisible();
+    await expect.soft(homePage.cartModalContinueButton).toBeVisible();
 
-      // Close modal to prevent it blocking other tests
-      await homePage.clickCartModalContinue();
-    });
+    // Close it so it cannot block the tests that follow on the shared page
+    await homePage.clickCartModalContinue();
   });
 
   // ======================================================
   // RECOMMENDED ITEMS
   // ======================================================
-  test.describe("Recommended Items Section", () => {
-    test("should display recommended items section", async ({ homePage }) => {
-      await homePage.recommendedItemsSection.scrollIntoViewIfNeeded();
-      await expect(homePage.recommendedItemsSection).toBeVisible();
-    });
+  test("Recommended Items shows its carousel and items", async ({
+    homePage,
+  }) => {
+    await homePage.recommendedItemsSection.scrollIntoViewIfNeeded();
 
-    test("should display Recommended Items heading", async ({ homePage }) => {
-      await homePage.recommendedItemsSection.scrollIntoViewIfNeeded();
-      await expect(homePage.recommendedItemsHeading).toBeVisible();
-    });
+    await expect.soft(homePage.recommendedItemsSection).toBeVisible();
+    await expect.soft(homePage.recommendedItemsHeading).toBeVisible();
+    await expect.soft(homePage.recommendedCarousel).toBeVisible();
 
-    test("should display recommended carousel", async ({ homePage }) => {
-      await homePage.recommendedItemsSection.scrollIntoViewIfNeeded();
-      await expect(homePage.recommendedCarousel).toBeVisible();
-    });
-
-    test("should display recommended items", async ({ homePage }) => {
-      await homePage.recommendedItemsSection.scrollIntoViewIfNeeded();
-      const count = await homePage.recommendedItems.count();
-      expect(count).toBeGreaterThan(0);
-    });
+    expect.soft(await homePage.recommendedItems.count()).toBeGreaterThan(0);
   });
 
   // ======================================================
   // FOOTER SECTION
   // ======================================================
-  test.describe("Footer Section", () => {
-    test("should display footer", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.footer).toBeVisible();
-    });
+  test("Footer shows the subscription form and copyright", async ({
+    footerSection,
+  }) => {
+    await footerSection.scrollToFooter();
 
-    test("should display footer widget", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.footerWidget).toBeVisible();
-    });
-
-    test("should display subscription section", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.subscriptionSection).toBeVisible();
-    });
-
-    test("should display Subscription heading", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.subscriptionHeading).toBeVisible();
-    });
-
-    test("should display subscription form", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.subscriptionForm).toBeVisible();
-    });
-
-    test("should display subscription email input", async ({
-      footerSection,
-    }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.subscriptionEmailInput).toBeVisible();
-    });
-
-    test("should display subscription submit button", async ({
-      footerSection,
-    }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.subscriptionSubmitButton).toBeVisible();
-    });
-
-    test("should display footer bottom", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.footerBottom).toBeVisible();
-    });
-
-    test("should display copyright text", async ({ footerSection }) => {
-      await footerSection.scrollToFooter();
-      await expect(footerSection.copyrightText).toBeVisible();
-    });
+    await expect.soft(footerSection.footer).toBeVisible();
+    await expect.soft(footerSection.footerWidget).toBeVisible();
+    await expect.soft(footerSection.subscriptionSection).toBeVisible();
+    await expect.soft(footerSection.subscriptionHeading).toBeVisible();
+    await expect.soft(footerSection.subscriptionForm).toBeVisible();
+    await expect.soft(footerSection.subscriptionEmailInput).toBeVisible();
+    await expect.soft(footerSection.subscriptionSubmitButton).toBeVisible();
+    await expect.soft(footerSection.footerBottom).toBeVisible();
+    await expect.soft(footerSection.copyrightText).toBeVisible();
   });
 });

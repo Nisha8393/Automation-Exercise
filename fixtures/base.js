@@ -18,6 +18,13 @@ import PaymentDonePage from "../pages/orderConfirmation.page.js";
 
 const BASE_URL = "https://automationexercise.com";
 
+// Third-party requests that only slow the run down and add flake
+const AD_AND_TRACKER_PATTERN =
+  /googleads|googlesyndication|doubleclick|adservice|analytics|facebook.*pixel|ads\./;
+
+const blockAdsAndTrackers = (page) =>
+  page.route(AD_AND_TRACKER_PATTERN, (route) => route.abort());
+
 export const test = base.extend({
   // ============================================================================
   // ISOLATED FIXTURES (Test-scoped)
@@ -25,20 +32,14 @@ export const test = base.extend({
   // Each test gets a fresh page and context
   // ============================================================================
 
-  isolatedPage: async ({ browser }, use) => {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-
-    // Block ads and tracking
-    await page.route(
-      /googleads|googlesyndication|doubleclick|adservice|analytics|facebook.*pixel|ads\./,
-      (route) => route.abort(),
-    );
-
+  // Built on Playwright's own `page` so that test.use({ storageState }) and the
+  // project's viewport/trace settings apply - a hand-rolled browser.newContext()
+  // would silently ignore all of them
+  isolatedPage: async ({ page }, use) => {
+    await blockAdsAndTrackers(page);
     await page.goto(BASE_URL);
     await page.waitForLoadState("domcontentloaded");
     await use(page);
-    await context.close();
   },
   header: async ({ isolatedPage }, use) => {
     await use(new HeaderSection(isolatedPage));
@@ -102,12 +103,7 @@ export const test = base.extend({
     async ({ sharedContext }, use) => {
       const page = await sharedContext.newPage();
 
-      // Block ads and tracking
-      await page.route(
-        /googleads|googlesyndication|doubleclick|adservice|analytics|facebook.*pixel|ads\./,
-        (route) => route.abort(),
-      );
-
+      await blockAdsAndTrackers(page);
       await page.goto(BASE_URL);
       await page.waitForLoadState("domcontentloaded");
       await use(page);
