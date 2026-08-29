@@ -9,21 +9,25 @@ import AxeBuilder from "@axe-core/playwright";
 // Baselines captured 2026-08-15 against the live site.
 const PAGES = [
   {
+    caseId: "A11Y-SCAN-01",
     name: "Home",
     path: "/",
     baseline: ["button-name", "color-contrast", "link-name"],
   },
   {
+    caseId: "A11Y-SCAN-02",
     name: "Products",
     path: "/products",
     baseline: ["button-name", "color-contrast"],
   },
   {
+    caseId: "A11Y-SCAN-03",
     name: "Cart",
     path: "/view_cart",
     baseline: ["button-name", "color-contrast"],
   },
   {
+    caseId: "A11Y-SCAN-04",
     name: "Signup / Login",
     path: "/login",
     baseline: ["button-name", "color-contrast"],
@@ -31,6 +35,7 @@ const PAGES = [
   // "label" here is the same defect the README documents: the Contact Us
   // inputs have labels that are not tied to them
   {
+    caseId: "A11Y-SCAN-05",
     name: "Contact Us",
     path: "/contact_us",
     baseline: ["button-name", "color-contrast", "label"],
@@ -40,34 +45,39 @@ const PAGES = [
 const IMPACTS_THAT_FAIL = ["critical", "serious"];
 
 test.describe("Accessibility", { tag: "@a11y" }, () => {
-  for (const { name, path, baseline } of PAGES) {
-    test(`${name} has no new WCAG 2.1 A/AA violations`, async ({
-      isolatedPage,
-    }, testInfo) => {
-      await isolatedPage.goto(path);
-      await isolatedPage.waitForLoadState("domcontentloaded");
+  for (const { caseId, name, path, baseline } of PAGES) {
+    test(
+      `${name} has no new WCAG 2.1 A/AA violations`,
+      { tag: `@${caseId}` },
+      async ({ isolatedPage }, testInfo) => {
+        await isolatedPage.goto(path);
+        await isolatedPage.waitForLoadState("domcontentloaded");
 
-      const { violations } = await new AxeBuilder({ page: isolatedPage })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-        .analyze();
+        const { violations } = await new AxeBuilder({ page: isolatedPage })
+          .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+          .analyze();
 
-      // Always attach the full scan so the baseline can be reviewed and trimmed
-      await testInfo.attach(`axe-${name}.json`, {
-        body: JSON.stringify(violations, null, 2),
-        contentType: "application/json",
-      });
+        // Always attach the full scan so the baseline can be reviewed and trimmed
+        await testInfo.attach(`axe-${name}.json`, {
+          body: JSON.stringify(violations, null, 2),
+          contentType: "application/json",
+        });
 
-      const regressions = violations
-        .filter((v) => IMPACTS_THAT_FAIL.includes(v.impact))
-        .filter((v) => !baseline.includes(v.id));
+        const regressions = violations
+          .filter((v) => IMPACTS_THAT_FAIL.includes(v.impact))
+          .filter((v) => !baseline.includes(v.id));
 
-      const summary = regressions
-        .map((v) => `${v.id} (${v.impact}, ${v.nodes.length} nodes): ${v.help}`)
-        .join("\n");
+        const summary = regressions
+          .map(
+            (v) => `${v.id} (${v.impact}, ${v.nodes.length} nodes): ${v.help}`,
+          )
+          .join("\n");
 
-      expect(regressions, `New accessibility violations:\n${summary}`).toEqual(
-        [],
-      );
-    });
+        expect(
+          regressions,
+          `New accessibility violations:\n${summary}`,
+        ).toEqual([]);
+      },
+    );
   }
 });

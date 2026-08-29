@@ -5,8 +5,8 @@
 
 # Playwright
 node_modules/
-/test-results/
-/playwright-report/
+# All generated artifacts live here - see README > Reports
+/reports/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/

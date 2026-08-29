@@ -4,10 +4,17 @@ import { defineConfig, devices } from "@playwright/test";
 // .env is loaded where it is used, in utils/testData/auth.data.js
 
 /** @type {import('@playwright/test').ReporterDescription[]} */
+// Every generated artifact lands under reports/ - see README > Reports.
 const reporters = [
   // Never auto-open a browser on CI - it has no display and would hang
-  ["html", { open: process.env.CI ? "never" : "always" }],
-  ["./scripts/generateExcelReport.js", {}],
+  [
+    "html",
+    {
+      open: process.env.CI ? "never" : "always",
+      outputFolder: "reports/playwright",
+    },
+  ],
+  ["./scripts/generateExcelReport.js", { outputDir: "reports/excel" }],
 ];
 
 // Annotates failures directly on the GitHub Actions run
@@ -18,7 +25,12 @@ if (process.env.CI) reporters.push(["github", {}]);
  */
 export default defineConfig({
   testDir: "./tests",
-  // globalSetup removed - worker-scoped fixture in fixtures/base.js handles navigation
+  // Traces, screenshots and videos - kept with the other artifacts.
+  outputDir: "./reports/test-results",
+  // Navigation is handled by the fixtures in fixtures/base.js; this only checks
+  // the site is reachable and not serving its bot check, so a blocked run fails
+  // in seconds with a clear reason instead of timing out 88 tests.
+  globalSetup: "./utils/preflight.js",
   /* Sequential on purpose: the live site throttles concurrent browsers and
      serves a bot check to datacenter IPs, and the order-review and e2e tests
      share one account whose cart lives server-side. */

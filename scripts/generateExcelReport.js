@@ -70,9 +70,11 @@ class ExcelReporter {
     this.options = options || {};
     this.results = [];
 
-    this.reportDir =
-      process.env.PLAYWRIGHT_REPORT_DIR ||
-      path.join(process.cwd(), "playwright-report");
+    this.reportDir = path.resolve(
+      this.options.outputDir ||
+        process.env.PLAYWRIGHT_REPORT_DIR ||
+        path.join("reports", "excel"),
+    );
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     this.reportPath = path.join(

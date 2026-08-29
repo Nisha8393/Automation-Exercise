@@ -56,6 +56,43 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+  # Lists the specs, never runs them - so no browsers, no credentials, and it
+  # finishes in seconds on every PR. Warns if the sheet and the specs disagree.
+  coverage:
+    name: Automation coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate coverage report
+        run: npm run coverage | tee coverage.log
+
+      - name: Add coverage to the job summary
+        run: |
+          echo "### Automation coverage" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          grep -E 'automatable cases|WARNING' coverage.log >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-report-${{ github.run_attempt }}
+          path: reports/coverage/
+          retention-days: 30
+
   # Deliberately a single runner. The site serves a bot-check interstitial to
   # datacenter IPs, so every additional concurrent runner is another chance of
   # being challenged. The suite finishes in ~6 minutes, which is not worth
@@ -107,7 +144,9 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ github.run_attempt }}
-          path: playwright-report/
+          path: |
+            reports/playwright/
+            reports/excel/
           retention-days: 30
 
       - name: Upload failure traces and screenshots
@@ -115,5 +154,5 @@ jobs:
         if: failure()
         with:
           name: test-results-${{ github.run_attempt }}
-          path: test-results/
+          path: reports/test-results/
           retention-days: 7
