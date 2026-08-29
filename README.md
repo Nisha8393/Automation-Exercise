@@ -1,6 +1,6 @@
 # Automation Exercise - Playwright Test Suite
 
-[![Playwright Tests](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml/badge.svg?event=push)](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml?query=event%3Apush)
+[![Playwright Tests](https://github.com/Nisha8393/Automation-Exercise/actions/workflows/playwright.yml/badge.svg?event=push)](https://github.com/Nisha8393/Automation-Exercise/actions/workflows/playwright.yml?query=event%3Apush)
 
 End-to-end test automation for [automationexercise.com](https://automationexercise.com) using Playwright with the Page Object Model pattern.
 
