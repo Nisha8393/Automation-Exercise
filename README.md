@@ -93,7 +93,7 @@ entered at registration.
 ## Locator Strategy
 
 Locators follow Playwright's recommended priority: role-based first, then
-user-visible text, and CSS only where the page gives us nothing better.
+user-visible text, and CSS only where the page offers nothing better.
 
 ```js
 // Role + accessible name - resilient to markup changes
@@ -204,21 +204,10 @@ test("Login with valid credentials - Logged in successfully", { tag: "@R-AUTH-07
 test("Filter by Polo brand - Shows Polo products", { tag: ["@R-PROD-17", "@R-PROD-22"] }, ...);
 ```
 
-A test is tagged **only when the assertions in its call path collectively
-establish that row's Expected Result** - including assertions inside the page
-objects, since every POM method asserts visibility before it acts. So
-`login()` asserting the email, password and login button covers S-AP-03
-("Login form complete") even though no test is named after it.
-
-Partial coverage stays untagged - an inflated number is worse than no number.
-Two worked examples of the line:
-
-- **R-CHK-05** ("order total matches cart") - `verifyTotalAmount()` asserts the
-  total is visible and contains "Rs.", not that it equals the cart. Not covered.
-- **S-CP-02** ("cart table headers present") - the five header locators are
-  defined in the POM and referenced by nothing. Not covered.
-
-That makes coverage computable, and lets you rerun the tests for one case:
+A test is tagged only when the assertions in its call path establish that row's
+Expected Result, including assertions inside the page objects. Partial coverage
+stays untagged - R-CHK-05 ("order total matches cart") is not tagged, because
+`verifyTotalAmount()` asserts the total is visible, not that it equals the cart.
 
 ```bash
 npx playwright test --grep "@R-AUTH-07"
@@ -259,10 +248,6 @@ N/A / BLOCKED / Automated`, and the ID convention.
 
 ID prefixes: `R-` regression, `S-` smoke, `E2E-` journey, `A11Y-` accessibility,
 `API-` backend. Filter `Status = PASS AND Automated = No` to get the automation queue.
-
-The layout follows the workbooks I use at work, with one file here instead of one
-per feature, and a single `Status` column since this project tests one live
-environment rather than dev and staging.
 
 ### A note on the smoke suite
 
@@ -314,24 +299,14 @@ The pipeline has four jobs:
    suite finishes in about six minutes, which is not worth trading for flake.
 Traces and screenshots are uploaded only when something fails.
 
-### The badge tracks pushes, not the nightly
+The badge is scoped to `?event=push`, so it reflects the last run on a code
+change rather than the nightly.
 
-The badge is scoped with `?event=push`, so it answers "does the code work when
-someone changes it" rather than "was the live site friendly at 06:00 UTC".
-
-The suite runs against a third-party site that serves a **bot-check interstitial
-to datacenter IPs**. When that happens no page renders, every test times out on
-the missing header, and an unscoped badge goes red for something that is not a
-defect. The nightly still runs and still reports failures - it just doesn't drive
-the badge. Drop `?event=push` from the URL to have the badge track every run.
-
-`utils/preflight.js` runs once as `globalSetup` and loads the homepage before any
-test starts. If the header never appears it aborts the run immediately with the
-HTTP status, page title, a snippet of the page text and a screenshot
-(`reports/test-results/preflight-failure.png`), so a blocked run fails in seconds
-and says why. Without it, a blocked run took **20 minutes** to report 88 timeouts.
-It does not run on `--list`, so `npm run coverage` and `npm run sync-specs` are
-unaffected.
+`utils/preflight.js` runs as `globalSetup`: it loads the homepage before any test
+starts and fails the run immediately if the header never renders, reporting the
+HTTP status, page title and a screenshot to
+`reports/test-results/preflight-failure.png`. The site serves a bot check to
+datacenter IPs, which is what this catches. It does not run on `--list`.
 
 The HTML and Excel reports are uploaded as build artifacts. Publishing them to
 GitHub Pages is deliberately not enabled: failure screenshots and traces would
