@@ -27,51 +27,56 @@ test.describe("Product Details Page", { tag: "@regression" }, () => {
   // PRODUCT INFORMATION TESTS
   // ============================================================================
 
-  test("Verify product detail info - All fields match expected values", async ({
-    productDetailsPage,
-  }) => {
-    const name = await productDetailsPage.getProductName();
-    expect(name).toBe(FIRST_PRODUCT.name);
+  test(
+    "Verify product detail info - All fields match expected values",
+    { tag: "@R-PROD-04" },
+    async ({ productDetailsPage }) => {
+      const name = await productDetailsPage.getProductName();
+      expect(name).toBe(FIRST_PRODUCT.name);
 
-    const category = await productDetailsPage.getProductCategory();
-    expect(category).toBe(FIRST_PRODUCT.category);
+      const category = await productDetailsPage.getProductCategory();
+      expect(category).toBe(FIRST_PRODUCT.category);
 
-    const price = await productDetailsPage.getProductPrice();
-    expect(price).toBe(FIRST_PRODUCT.price);
+      const price = await productDetailsPage.getProductPrice();
+      expect(price).toBe(FIRST_PRODUCT.price);
 
-    const availability = await productDetailsPage.getAvailability();
-    expect(availability).toBe(FIRST_PRODUCT.availability);
+      const availability = await productDetailsPage.getAvailability();
+      expect(availability).toBe(FIRST_PRODUCT.availability);
 
-    const condition = await productDetailsPage.getCondition();
-    expect(condition).toBe(FIRST_PRODUCT.condition);
+      const condition = await productDetailsPage.getCondition();
+      expect(condition).toBe(FIRST_PRODUCT.condition);
 
-    const brand = await productDetailsPage.getBrand();
-    expect(brand).toBe(FIRST_PRODUCT.brand);
-  });
+      const brand = await productDetailsPage.getBrand();
+      expect(brand).toBe(FIRST_PRODUCT.brand);
+    },
+  );
 
-  test("Verify product quantity selector - Default value is 1", async ({
-    productDetailsPage,
-  }) => {
-    await expect(productDetailsPage.quantityInput).toBeVisible();
+  test(
+    "Verify product quantity selector - Default value is 1",
+    { tag: "@R-PROD-05" },
+    async ({ productDetailsPage }) => {
+      await expect(productDetailsPage.quantityInput).toBeVisible();
 
-    const quantity = await productDetailsPage.getQuantity();
-    expect(quantity).toBe("1");
-  });
+      const quantity = await productDetailsPage.getQuantity();
+      expect(quantity).toBe("1");
+    },
+  );
 
   // ============================================================================
   // SEARCH EDGE CASE
   // ============================================================================
 
-  test("Search with special characters - Handled gracefully", async ({
-    header,
-    productsPage,
-  }) => {
-    await header.clickProducts();
+  test(
+    "Search with special characters - Handled gracefully",
+    { tag: "@R-PROD-09" },
+    async ({ header, productsPage }) => {
+      await header.clickProducts();
 
-    await productsPage.searchProduct("@#$%");
+      await productsPage.searchProduct("@#$%");
 
-    // Should handle gracefully - either 0 products or all products remain
-    const count = await productsPage.getProductCardsCount();
-    expect(count).toBeGreaterThanOrEqual(0);
-  });
+      // Should handle gracefully - either 0 products or all products remain
+      const count = await productsPage.getProductCardsCount();
+      expect(count).toBeGreaterThanOrEqual(0);
+    },
+  );
 });

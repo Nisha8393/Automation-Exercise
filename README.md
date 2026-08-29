@@ -1,6 +1,6 @@
 # Automation Exercise - Playwright Test Suite
 
-[![Playwright Tests](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml/badge.svg)](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml)
+[![Playwright Tests](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml/badge.svg?event=push)](https://github.com/Nisha7001/Automation-Exercise/actions/workflows/playwright.yml?query=event%3Apush)
 
 End-to-end test automation for [automationexercise.com](https://automationexercise.com) using Playwright with the Page Object Model pattern.
 
@@ -33,7 +33,13 @@ The smoke suite also runs on Firefox and WebKit, so a full run executes 105 test
 │   ├── helper/         # Data generation, cart clean-up, account registration
 │   ├── testData/       # Test data files
 │   └── authState.js    # Path to the saved session
-└── scripts/            # Custom reporters (Excel)
+├── test-scenarios/     # Manual test case workbook - the source for coverage
+├── scripts/            # Excel run reporter, coverage report, spec sync
+└── reports/            # ALL generated output (gitignored)
+    ├── playwright/     # Playwright's HTML report
+    ├── excel/          # Excel run report (.xlsx)
+    ├── coverage/       # Coverage report (.html)
+    └── test-results/   # Traces, screenshots and videos from failures
 ```
 
 ## Fixture Design
@@ -152,6 +158,8 @@ npm run test:headed       # Visible browser
 npm run test:ui           # Interactive UI mode
 npm run test:debug        # Step-through debugger
 npm run report            # Open the last HTML report
+npm run coverage          # Build the coverage report (runs no tests)
+npm run sync-specs        # Refresh the workbook's Automated + Spec columns
 ```
 
 Lint and formatting:
@@ -184,6 +192,77 @@ Run a single file or folder:
 npx playwright test tests/regression/auth/login.spec.js
 npx playwright test tests/regression/products/
 ```
+
+### Case ID tags and coverage
+
+On top of its suite tag, each test carries the ID of the manual case it covers,
+verbatim, from
+[AutomationExercise_TestCases.xlsx](test-scenarios/AutomationExercise_TestCases.xlsx):
+
+```js
+test("Login with valid credentials - Logged in successfully", { tag: "@R-AUTH-07" }, ...);
+test("Filter by Polo brand - Shows Polo products", { tag: ["@R-PROD-17", "@R-PROD-22"] }, ...);
+```
+
+A test is tagged **only when the assertions in its call path collectively
+establish that row's Expected Result** - including assertions inside the page
+objects, since every POM method asserts visibility before it acts. So
+`login()` asserting the email, password and login button covers S-AP-03
+("Login form complete") even though no test is named after it.
+
+Partial coverage stays untagged - an inflated number is worse than no number.
+Two worked examples of the line:
+
+- **R-CHK-05** ("order total matches cart") - `verifyTotalAmount()` asserts the
+  total is visible and contains "Rs.", not that it equals the cart. Not covered.
+- **S-CP-02** ("cart table headers present") - the five header locators are
+  defined in the POM and referenced by nothing. Not covered.
+
+That makes coverage computable, and lets you rerun the tests for one case:
+
+```bash
+npx playwright test --grep "@R-AUTH-07"
+npm run coverage          # 102/113 automatable cases automated (90%)
+```
+
+The workbook's `Automated` column and the spec tags are two records of the same
+fact, so `npm run coverage` reconciles them in both directions and warns on
+drift - a case marked Yes with no tag, a tag not marked Yes, or a tag with no row.
+
+`npm run sync-specs` resolves that drift the other way: it reads the tags and
+writes `Automated` and `Spec` back into the workbook, so the specs stay the
+authority on what is automated. It never touches the manual columns and never
+overwrites a recorded `Status`. `--dry` previews the changes.
+
+## Manual Test Cases
+
+[`test-scenarios/AutomationExercise_TestCases.xlsx`](test-scenarios/AutomationExercise_TestCases.xlsx)
+is the source of truth for what is being tested. Two tabs:
+
+**Summary** — site and API links, a live `COUNTIF` rollup of `TOTAL / PASS / FAIL /
+N/A / BLOCKED / Automated`, and the ID convention.
+
+**Test Cases** — one row per case, frozen and filterable header:
+
+| Column | |
+| --- | --- |
+| `Test Case ID` | `R-AUTH-01`. The prefix carries the test type, so there is no Test Type column |
+| `Module` | Feature area — this is what the coverage report groups by |
+| `Test Case Summary` | What the case checks |
+| `Preconditions`, `Test Data`, `Postconditions` | Filled in as cases are executed |
+| `Test Steps` | How to run it manually |
+| `Expected Result` | What must be true. **A spec is only tagged if it asserts this** |
+| `Status` | `PASS` / `FAIL` / `N/A` / `BLOCKED`, a dropdown sourced from the Summary labels so the two never drift |
+| `Automated` | `Yes` / `No`, the input to the coverage percentage |
+| `Spec` | The Playwright file covering the case, e.g. `tests/regression/auth/login.spec.js` |
+| `Notes` | Anything unresolved |
+
+ID prefixes: `R-` regression, `S-` smoke, `E2E-` journey, `A11Y-` accessibility,
+`API-` backend. Filter `Status = PASS AND Automated = No` to get the automation queue.
+
+The layout follows the workbooks I use at work, with one file here instead of one
+per feature, and a single `Status` column since this project tests one live
+environment rather than dev and staging.
 
 ### A note on the smoke suite
 
@@ -221,16 +300,38 @@ Test configuration is in `playwright.config.js`:
 `.github/workflows/playwright.yml` runs on every push and pull request to
 `main`, nightly at 06:00 UTC, and on demand via **Run workflow**.
 
-The pipeline has three jobs:
+The pipeline has four jobs:
 
 1. **Secret scan** — gitleaks over the full history, not just the diff.
 2. **Lint** — `npm run lint` and `npm run format:check`.
-3. **Test** — the whole suite on a single runner, producing the HTML and Excel
+3. **Automation coverage** — `npm run coverage`, writing the percentage to the
+   job summary and uploading the report. It only lists the specs, so it needs no
+   browsers and no credentials and finishes in seconds.
+4. **Test** — the whole suite on a single runner, producing the HTML and Excel
    reports. Deliberately one runner: the site serves a bot-check interstitial to
    datacenter IPs, so each extra concurrent runner is another chance of being
    challenged. Sharding was tried and reverted for exactly that reason — the
    suite finishes in about six minutes, which is not worth trading for flake.
 Traces and screenshots are uploaded only when something fails.
+
+### The badge tracks pushes, not the nightly
+
+The badge is scoped with `?event=push`, so it answers "does the code work when
+someone changes it" rather than "was the live site friendly at 06:00 UTC".
+
+The suite runs against a third-party site that serves a **bot-check interstitial
+to datacenter IPs**. When that happens no page renders, every test times out on
+the missing header, and an unscoped badge goes red for something that is not a
+defect. The nightly still runs and still reports failures - it just doesn't drive
+the badge. Drop `?event=push` from the URL to have the badge track every run.
+
+`utils/preflight.js` runs once as `globalSetup` and loads the homepage before any
+test starts. If the header never appears it aborts the run immediately with the
+HTTP status, page title, a snippet of the page text and a screenshot
+(`reports/test-results/preflight-failure.png`), so a blocked run fails in seconds
+and says why. Without it, a blocked run took **20 minutes** to report 88 timeouts.
+It does not run on `--list`, so `npm run coverage` and `npm run sync-specs` are
+unaffected.
 
 The HTML and Excel reports are uploaded as build artifacts. Publishing them to
 GitHub Pages is deliberately not enabled: failure screenshots and traces would
@@ -247,5 +348,26 @@ Add these repository secrets under **Settings → Secrets and variables → Acti
 
 ## Reports
 
-- **HTML Report**: `playwright-report/index.html`, opens automatically after a local run
-- **Excel Report**: generated alongside it by the custom reporter in `scripts/`
+Three reports, answering two different questions. A run can be all green while
+coverage is low, and coverage can be high while a run is red - so they are kept
+apart on purpose.
+
+Everything generated lands under `reports/`, which is gitignored in full - no
+stray output directories at the repo root:
+
+| Path | What | Produced by |
+| --- | --- | --- |
+| `reports/playwright/` | Playwright's own HTML report | every run (`npm run report` opens it) |
+| `reports/excel/` | Excel run report with a run-info block and a pass/fail pie drawn without any charting dependency | every run |
+| `reports/coverage/` | Coverage report | `npm run coverage` |
+| `reports/test-results/` | Traces, screenshots, videos | failures only |
+
+**What happened in this run:** the Playwright and Excel reports.
+
+**How much is automated** (a property of the suite, not of a run): the coverage report.
+
+The coverage report lists the specs without executing them, so it needs no test
+run, no browsers and no credentials - it finishes in seconds and runs on every PR.
+It shows coverage per feature, the backlog of cases nothing covers yet, and the
+sheet-vs-specs reconciliation. Coverage is `automated ÷ automatable`, with N/A
+cases excluded from both sides so unautomatable cases never drag the number down.

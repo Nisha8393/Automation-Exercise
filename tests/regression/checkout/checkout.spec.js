@@ -49,23 +49,29 @@ test.describe("Checkout - Address Verification", { tag: "@regression" }, () => {
     await header.clickDeleteAccount();
   });
 
-  test("Delivery address matches the address used at registration", async ({
-    checkoutPage,
-  }) => {
-    await checkoutPage.verifyDeliveryAddress(addressOf(user));
-  });
+  test(
+    "Delivery address matches the address used at registration",
+    { tag: "@R-CHK-01" },
+    async ({ checkoutPage }) => {
+      await checkoutPage.verifyDeliveryAddress(addressOf(user));
+    },
+  );
 
-  test("Billing address matches the address used at registration", async ({
-    checkoutPage,
-  }) => {
-    await checkoutPage.verifyBillingAddress(addressOf(user));
-  });
+  test(
+    "Billing address matches the address used at registration",
+    { tag: "@R-CHK-02" },
+    async ({ checkoutPage }) => {
+      await checkoutPage.verifyBillingAddress(addressOf(user));
+    },
+  );
 
-  test("Verify address format - All address fields shown", async ({
-    checkoutPage,
-  }) => {
-    await checkoutPage.verifyAddressFieldsVisible();
-  });
+  test(
+    "Verify address format - All address fields shown",
+    { tag: "@R-CHK-03" },
+    async ({ checkoutPage }) => {
+      await checkoutPage.verifyAddressFieldsVisible();
+    },
+  );
 });
 
 // ============================================================================
@@ -85,11 +91,13 @@ test.describe("Checkout - Order Review", { tag: "@regression" }, () => {
     await checkoutWithProduct({ header, home, viewCartPage });
   });
 
-  test("Verify order items - Product present in order review", async ({
-    checkoutPage,
-  }) => {
-    await checkoutPage.verifyOrderHasItems();
-  });
+  test(
+    "Verify order items - Product present in order review",
+    { tag: "@R-CHK-04" },
+    async ({ checkoutPage }) => {
+      await checkoutPage.verifyOrderHasItems();
+    },
+  );
 
   test("Verify order total - Total amount visible", async ({
     checkoutPage,
@@ -97,10 +105,14 @@ test.describe("Checkout - Order Review", { tag: "@regression" }, () => {
     await checkoutPage.verifyTotalAmount();
   });
 
-  test("Add order comment - Comment accepted", async ({ checkoutPage }) => {
-    const comment = "Please deliver between 9 AM and 5 PM.";
+  test(
+    "Add order comment - Comment accepted",
+    { tag: "@R-CHK-06" },
+    async ({ checkoutPage }) => {
+      const comment = "Please deliver between 9 AM and 5 PM.";
 
-    await checkoutPage.fillOrderMessage(comment);
-    await checkoutPage.verifyOrderMessage(comment);
-  });
+      await checkoutPage.fillOrderMessage(comment);
+      await checkoutPage.verifyOrderMessage(comment);
+    },
+  );
 });
