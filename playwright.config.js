@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, devices } from "@playwright/test";
+import { LAUNCH_ARGS } from "./utils/browser.js";
 
 // .env is loaded where it is used, in utils/testData/auth.data.js
 
@@ -83,13 +84,7 @@ export default defineConfig({
           width: 1280,
           height: 720,
         },
-        launchOptions: {
-          args: [
-            "--disable-blink-features=AutomationControlled",
-            "--disable-dev-shm-usage",
-            "--no-sandbox",
-          ],
-        },
+        launchOptions: { args: LAUNCH_ARGS },
       },
     },
 

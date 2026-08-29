@@ -5,15 +5,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  # Nightly run at 06:00 UTC to catch drift on the live site
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch:
 
-# Cancel an in-progress run when the same branch is pushed again
+# One run at a time. The site serves a bot check when it sees concurrent
+# automated traffic, so runs queue rather than overlap - a PR run and the merge
+# that follows it used to collide.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
   # Scans the full history, not just the diff - credentials were committed here

@@ -283,7 +283,11 @@ Test configuration is in `playwright.config.js`:
 ## Continuous Integration
 
 `.github/workflows/playwright.yml` runs on every push and pull request to
-`main`, nightly at 06:00 UTC, and on demand via **Run workflow**.
+`main`, and on demand via **Run workflow**.
+
+Runs are serialised - one at a time across pull requests and pushes. The site
+serves a bot check when it sees concurrent automated traffic, so a queued run
+waits rather than overlapping.
 
 The pipeline has four jobs:
 
@@ -299,8 +303,8 @@ The pipeline has four jobs:
    suite finishes in about six minutes, which is not worth trading for flake.
 Traces and screenshots are uploaded only when something fails.
 
-The badge is scoped to `?event=push`, so it reflects the last run on a code
-change rather than the nightly.
+The badge is scoped to `?event=push`, so it reflects the state of `main` rather
+than the most recent pull request run.
 
 `utils/preflight.js` runs as `globalSetup`: it loads the homepage before any test
 starts and fails the run immediately if the header never renders, reporting the
